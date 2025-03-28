@@ -1,0 +1,20 @@
+{
+  "name": "fyp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run start --prefix BackEnd\" \"npm run start --prefix frontend\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "dependencies": {
+    "@headlessui/react": "^2.2.0",
+    "fasttext.js": "^1.1.4",
+    "react-toastify": "^11.0.5"
+  }
+}

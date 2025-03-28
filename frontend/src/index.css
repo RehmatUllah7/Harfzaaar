@@ -1,0 +1,22 @@
+/* Import Tailwind CSS base styles */
+@tailwind base;
+
+/* Import Tailwind CSS component styles */
+@tailwind components;
+
+/* Import Tailwind CSS utility styles */
+@tailwind utilities;
+
+/* Optional: Add custom styles here if needed */
+body {
+  @apply bg-gray-100 text-gray-800;
+}
+
+h1, h2, h3 {
+  @apply font-bold text-gray-900;
+}
+
+/* Custom utility classes */
+.btn {
+  @apply bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600;
+}
