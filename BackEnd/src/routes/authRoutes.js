@@ -1,7 +1,7 @@
 //authRoutes.js file
 import { Router } from 'express';
 const router = Router();
-import { registerUser, loginUser, changePasswordViaPassword } from '../controllers/authController.js';
+import { registerUser, loginUser, changePasswordViaPassword, logoutUser } from '../controllers/authController.js';
 import { getUserInfo } from '../controllers/authController.js';  // Import the new controller function
 import { forgotPassword } from '../controllers/authController.js';
 import { verifyOtp } from '../controllers/authController.js';
@@ -24,6 +24,7 @@ router.post('/change-passwordviapassword', changePasswordViaPassword);
 
 router.post('/signup', registerUser);
 router.post('/login', loginUser);
+router.post('/logout', logoutUser);
 
 router.post('/verify-email', verifyEmail);
 // New route to get logged-in user's info

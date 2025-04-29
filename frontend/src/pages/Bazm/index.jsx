@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 import { formatDistanceToNow } from 'date-fns';
 import Header from '../../components/home/Header';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiSend, FiSmile } from 'react-icons/fi';
+import { FiSend, FiSmile, FiSearch } from 'react-icons/fi';
 import EmojiPicker from '../../components/EmojiPicker';
 
 const Bazm = () => {
@@ -19,6 +19,9 @@ const Bazm = () => {
   const [loadingMessages, setLoadingMessages] = useState(true);
   const [unreadCounts, setUnreadCounts] = useState({});
   const [showEmoji, setShowEmoji] = useState(false);
+  const [sortedUsers, setSortedUsers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
 
   const socketRef = useRef();
   const messagesEndRef = useRef(null);
@@ -72,23 +75,34 @@ const Bazm = () => {
     socketRef.current.removeAllListeners('receive_message');
     
     socketRef.current.on('receive_message', (message) => {
-      if (message.sender !== localStorage.getItem('userId')) {
+      console.log('Received message:', message); // Debug log
+      const currentUserId = localStorage.getItem('userId');
+      
+      if (message.sender !== currentUserId) {
         const newMessage = {
           ...message,
           sender: message.sender,
-          senderName: message.senderName || selectedUser?.username
+          senderName: message.senderName || message.sender?.username || selectedUser?.username
         };
-        setMessages(prev => [...prev, newMessage]);
+
+        // Only add message to current chat if it's from the selected user
+        if (selectedUser && message.sender === selectedUser._id) {
+          setMessages(prev => [...prev, newMessage]);
+        }
         
         // Update unread count for the sender
-        if (!selectedUser || message.sender !== selectedUser._id) {
-          const senderUsername = message.senderName;
-          if (senderUsername) {
-            setUnreadCounts(prev => ({
+        const senderUsername = message.senderName || message.sender?.username;
+        if (senderUsername) {
+          console.log('Updating unread count for:', senderUsername); // Debug log
+          setUnreadCounts(prev => {
+            const currentCount = prev[senderUsername] || 0;
+            const newCounts = {
               ...prev,
-              [senderUsername]: (prev[senderUsername] || 0) + 1
-            }));
-          }
+              [senderUsername]: currentCount + 1
+            };
+            console.log('New unread counts:', newCounts); // Debug log
+            return newCounts;
+          });
         }
       }
     });
@@ -136,11 +150,17 @@ const Bazm = () => {
 
   const handleUserSelect = async (user) => {
     try {
+      console.log('Selecting user:', user.username); // Debug log
       // Reset unread count for selected user
-      setUnreadCounts(prev => ({
-        ...prev,
-        [user.username]: 0
-      }));
+      setUnreadCounts(prev => {
+        const newCounts = { ...prev };
+        if (user.username) {
+          newCounts[user.username] = 0;
+        }
+        console.log('Resetting unread count for:', user.username); // Debug log
+        console.log('New unread counts:', newCounts); // Debug log
+        return newCounts;
+      });
       
       setSelectedUser(user);
       setLoadingMessages(true);
@@ -315,6 +335,7 @@ const Bazm = () => {
       const messageData = {
         roomId,
         sender: currentUserId,
+        senderName: username,
         content: newMessage.trim(),
         timestamp: new Date().toISOString()
       };
@@ -343,12 +364,14 @@ const Bazm = () => {
         timestamp: new Date().toISOString()
       };
       
+      // Add message to current chat immediately
       setMessages(prev => [...prev, newMessageObj]);
 
-      // Emit socket message
+      // Emit socket message with sender information
       socketRef.current.emit('send_message', {
         ...newMessageObj,
-        room: roomId
+        room: roomId,
+        senderName: username
       });
       
       setNewMessage('');
@@ -393,6 +416,34 @@ const Bazm = () => {
     });
   };
 
+  useEffect(() => {
+    if (activeUsers.length > 0) {
+      // Create a map of user IDs to their latest message timestamp
+      const userLatestMessage = {};
+      messages.forEach(message => {
+        const senderId = message.sender;
+        const timestamp = new Date(message.timestamp).getTime();
+        if (!userLatestMessage[senderId] || timestamp > userLatestMessage[senderId]) {
+          userLatestMessage[senderId] = timestamp;
+        }
+      });
+
+      // Sort active users based on their latest message timestamp
+      const sorted = [...activeUsers].sort((a, b) => {
+        const aTime = userLatestMessage[a._id] || 0;
+        const bTime = userLatestMessage[b._id] || 0;
+        return bTime - aTime; // Descending order (most recent first)
+      });
+
+      setSortedUsers(sorted);
+    }
+  }, [activeUsers, messages]);
+
+  // Add search filter function
+  const filteredUsers = sortedUsers.filter(user => 
+    user.username.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   if (loading) {
     return <div className="text-center p-4">Loading...</div>;
   }
@@ -409,52 +460,94 @@ const Bazm = () => {
           className="w-1/4 min-w-[280px] flex flex-col bg-white/10 backdrop-blur-lg rounded-2xl overflow-hidden"
         >
           <div className="p-6 border-b border-gray-700/30 bg-white/5">
-            <h2 className="text-xl font-semibold text-white">Active Users</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-white">Active Users</h2>
+              <button
+                onClick={() => setIsSearching(!isSearching)}
+                className="p-2 text-gray-400 hover:text-purple-500 transition-colors"
+              >
+                <FiSearch className="w-5 h-5" />
+              </button>
+            </div>
           </div>
+
+          {/* Search Field */}
+          <AnimatePresence>
+            {isSearching && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="border-b border-gray-700/30 bg-white/5"
+              >
+                <div className="p-4">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search users..."
+                    className="w-full p-3 bg-white/5 text-white placeholder-gray-400 rounded-lg border border-gray-700/30 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Active Users List */}
           <div className="flex-1 overflow-y-auto custom-scrollbar">
             {loading ? (
               <div className="p-4 text-center text-gray-300">Loading users...</div>
             ) : error ? (
               <div className="p-4 text-center text-red-400">{error}</div>
-            ) : activeUsers.length === 0 ? (
-              <div className="p-4 text-center text-gray-300">No active users found</div>
+            ) : filteredUsers.length === 0 ? (
+              <div className="p-4 text-center text-gray-300">
+                {searchQuery ? 'No users found' : 'No active users found'}
+              </div>
             ) : (
               <AnimatePresence>
-                {activeUsers.map(user => (
-                  <motion.div
-                    key={user._id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    whileHover={{ scale: 1.02 }}
-                    onClick={() => handleUserSelect(user)}
-                    className={`p-4 cursor-pointer transition-all duration-200 hover:bg-white/10 ${
-                      selectedUser?._id === user._id ? 'bg-white/15' : ''
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <div className="relative">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 to-pink-500 flex items-center justify-center text-white font-bold">
-                            {user.username[0].toUpperCase()}
+                {filteredUsers.map(user => {
+                  const unreadCount = unreadCounts[user.username] || 0;
+                  return (
+                    <motion.div
+                      key={user._id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      whileHover={{ scale: 1.02 }}
+                      onClick={() => handleUserSelect(user)}
+                      className={`p-4 cursor-pointer transition-all duration-200 hover:bg-white/10 ${
+                        selectedUser?._id === user._id ? 'bg-white/15' : ''
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <div className="relative">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 to-pink-500 flex items-center justify-center text-white font-bold">
+                              {user.username[0].toUpperCase()}
+                            </div>
+                            <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-900"></div>
+                            {unreadCount > 0 && (
+                              <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-gray-900"
+                              >
+                                {unreadCount > 10 ? '10+' : unreadCount}
+                              </motion.div>
+                            )}
                           </div>
-                          <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-900"></div>
-                        </div>
-                        <div className="ml-3">
-                          <span className="font-medium text-white">{user.username}</span>
-                          <span className="text-xs text-gray-400 block">
-                            {formatDistanceToNow(new Date(user.lastActivity), { addSuffix: true })}
-                          </span>
+                          <div className="ml-3">
+                            <span className="font-medium text-white">{user.username}</span>
+                            <span className="text-xs text-gray-400 block">
+                              {formatDistanceToNow(new Date(user.lastActivity), { addSuffix: true })}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                      {unreadCounts[user.username] > 0 && selectedUser?._id !== user._id && (
-                        <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold rounded-full px-2 py-1 min-w-[20px] text-center">
-                          {unreadCounts[user.username] > 10 ? '10+' : unreadCounts[user.username]}
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-                ))}
+                    </motion.div>
+                  );
+                })}
               </AnimatePresence>
             )}
           </div>
@@ -505,12 +598,13 @@ const Bazm = () => {
                   <AnimatePresence mode="popLayout">
                     {messages.map((message, index) => {
                       const isCurrentUser = message.sender === localStorage.getItem('userId');
+                      const messageKey = message._id || `${message.sender}_${message.timestamp}_${index}`;
                       
                       return (
                         <motion.div
-                          key={message._id || index}
+                          key={messageKey}
                           layout
-                          layoutId={message._id || index}
+                          layoutId={messageKey}
                           variants={messageVariants}
                           initial="initial"
                           animate="animate"
@@ -610,7 +704,7 @@ const Bazm = () => {
                 transition={{ duration: 0.3, delay: 0.1 }}
                 className="text-xl font-semibold mb-2"
               >
-                Welcome to Bazm Chat
+                Welcome to HarfZaar Chat
               </motion.p>
               <motion.p
                 initial={{ y: 10, opacity: 0 }}

@@ -52,8 +52,10 @@ io.on('connection', (socket) => {
       // Broadcast to all clients in the room except the sender
       socket.to(data.room).emit('receive_message', {
         sender: data.sender,
+        senderName: data.senderName,
         content: data.content,
-        timestamp: data.timestamp || new Date().toISOString()
+        timestamp: data.timestamp || new Date().toISOString(),
+        unread: true
       });
     } catch (error) {
       console.error('Error handling message:', error);

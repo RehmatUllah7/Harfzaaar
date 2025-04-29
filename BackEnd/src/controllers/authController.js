@@ -265,4 +265,16 @@ export const registerUser = async (req, res) => {
   }
 };
 
+// Logout user
+export const logoutUser = async (req, res) => {
+  try {
+    // Since we're using JWT tokens stored in localStorage, we don't need to do anything on the server
+    // The client will handle removing the token
+    res.status(200).json({ message: 'Logged out successfully' });
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).json({ message: 'Error during logout' });
+  }
+};
+
 

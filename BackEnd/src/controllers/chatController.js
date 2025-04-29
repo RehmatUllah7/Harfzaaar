@@ -16,6 +16,11 @@ export const getChatHistory = async (req, res) => {
       return res.status(404).json({ message: 'Chat room not found' });
     }
 
+    // Reset unread count for the current user
+    const currentUserId = req.user._id.toString();
+    chat.unreadCounts.set(currentUserId, 0);
+    await chat.save();
+
     console.log('Chat history found:', chat);
     res.status(200).json(chat);
   } catch (error) {
@@ -56,7 +61,8 @@ export const createChatRoom = async (req, res) => {
     const chat = new Chat({
       roomId,
       participants,
-      messages: []
+      messages: [],
+      unreadCounts: new Map()
     });
 
     await chat.save();
@@ -83,7 +89,8 @@ export const saveMessage = async (req, res) => {
     const messageData = {
       sender,
       content,
-      timestamp: new Date()
+      timestamp: new Date(),
+      read: false
     };
 
     // Add file information if present
@@ -95,6 +102,15 @@ export const saveMessage = async (req, res) => {
 
     chat.messages.push(messageData);
     chat.lastActivity = new Date();
+
+    // Update unread counts for all participants except sender
+    chat.participants.forEach(participantId => {
+      if (participantId.toString() !== sender) {
+        const currentCount = chat.unreadCounts.get(participantId.toString()) || 0;
+        chat.unreadCounts.set(participantId.toString(), currentCount + 1);
+      }
+    });
+
     await chat.save();
     
     console.log('Message saved successfully');
@@ -105,7 +121,7 @@ export const saveMessage = async (req, res) => {
   }
 };
 
-// Get active users
+// Get active users with unread counts
 export const getActiveUsers = async (req, res) => {
   try {
     console.log('Fetching active users');
@@ -124,8 +140,29 @@ export const getActiveUsers = async (req, res) => {
       _id: { $ne: req.user._id } // Exclude current user
     }).select('username email isActive lastActivity');
 
-    console.log('Active users found:', activeUsers.length);
-    res.status(200).json(activeUsers);
+    // Get unread counts for each user
+    const unreadCounts = {};
+    const chats = await Chat.find({
+      participants: req.user._id
+    });
+
+    chats.forEach(chat => {
+      chat.participants.forEach(participantId => {
+        if (participantId.toString() !== req.user._id.toString()) {
+          const count = chat.unreadCounts.get(req.user._id.toString()) || 0;
+          unreadCounts[participantId.toString()] = count;
+        }
+      });
+    });
+
+    // Add unread counts to active users
+    const activeUsersWithCounts = activeUsers.map(user => ({
+      ...user.toObject(),
+      unreadCount: unreadCounts[user._id.toString()] || 0
+    }));
+
+    console.log('Active users found:', activeUsersWithCounts.length);
+    res.status(200).json(activeUsersWithCounts);
   } catch (error) {
     console.error('Error fetching active users:', error);
     res.status(500).json({ message: 'Error fetching active users' });

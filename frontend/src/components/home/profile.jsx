@@ -66,14 +66,31 @@ const Profile = () => {
       });
 
       if (response.ok) {
-        localStorage.removeItem('authToken'); // Clear token
-        localStorage.removeItem('username');  // Clear any other user info
-        window.location.href = '/'; // Redirect home
+        // Clear all local storage items
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('username');
+        
+        // Close the dropdown
+        setIsOpen(false);
+        
+        // Redirect to home page
+        window.location.href = '/';
       } else {
         console.error('Failed to logout properly.');
+        // Still clear local storage and redirect even if server request fails
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('username');
+        window.location.href = '/';
       }
     } catch (error) {
       console.error('Logout error:', error);
+      // Still clear local storage and redirect even if there's an error
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('username');
+      window.location.href = '/';
     } finally {
       setIsLoggingOut(false); // stop loading
     }

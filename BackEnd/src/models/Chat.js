@@ -25,6 +25,10 @@ const messageSchema = new mongoose.Schema({
   },
   duration: {  // For voice messages
     type: Number
+  },
+  read: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -42,6 +46,11 @@ const chatSchema = new mongoose.Schema({
   lastActivity: {
     type: Date,
     default: Date.now
+  },
+  unreadCounts: {
+    type: Map,
+    of: Number,
+    default: new Map()
   }
 }, {
   timestamps: true
