@@ -6,7 +6,7 @@ import HarfZaarResetPassword from './components/forgetpass';
 import Header from './components/home/Header';
 import Qaafia from './components/home/qaafia';
 import SplashScreen from './components/SplashScreen';
-
+import { Toaster } from 'react-hot-toast';
 import News from './components/home/news';
 
 import Slideimg from './components/home/Slideimg';
@@ -14,25 +14,39 @@ import Home from './components/home/homePage';
 import QuizLandingPage from './pages/QuizLandingPage';
 import QuizPage from './pages/QuizPage';
 import ResultPage from './pages/quizResult';
-import SearchResults from './pages/SearchResults';
 import Poets from "./pages/Poets";
 import PoetDetail from "./pages/PoetDetail";
 import ResetOptions from './components/forgetpass/resetoptions';
 import ContinueViaPassword from './components/forgetpass/ContinueViaPassword';
 import BecomePoet from './pages/BecomePoet';
-import Bazm from './pages/bazm';
-import PoetHome from './pages/poethome';
-import ContestsPage from './pages/contests';
+import Bazm from './pages/Bazm';
+
+import ImageSearchPage from './pages/ImageSearch';
+import { ImageSearchProvider } from '../src/context/ImageSearchContext'; // import context   
+import SearchResults from './pages/SearchResults';
+import VoiceSearch from './pages/VoiceSearch';
 
 function App() {
   return (
     <div className="">
-      
-     
+      {/*  Add Toaster at global level */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 2000,
+          style: {
+            zIndex: 9999,
+            background: "#fff",
+            color: "#333",
+            borderRadius: "8px",
+          },
+        }}
+      />
+      <ImageSearchProvider>
       <BrowserRouter>
       <SplashScreen> 
         <Routes>
-       
+       ``
           
           {/* Default Route */}
           <Route path="/" element={<HarfZaarLogin />} />
@@ -62,11 +76,14 @@ function App() {
            <Route path="/quizresults" element={<ResultPage />} />
            <Route path='/becomepoet' element={<BecomePoet />} />
            <Route path='/bazm' element={<Bazm />} />
-         <Route path='/poethome' element={<PoetHome />} />
-         <Route path='contests' element={<ContestsPage />} />
+        
+
+         <Route path="/is" element={<ImageSearchPage />} />
+         <Route path="/voicesearch" element={<VoiceSearch />} />
         </Routes>
         </SplashScreen>
       </BrowserRouter>
+      </ImageSearchProvider>  
     </div>
   );
 }

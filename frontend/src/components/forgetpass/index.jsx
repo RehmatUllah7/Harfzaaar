@@ -28,7 +28,7 @@ const HarfZaarResetPassword = () => {
     setIsLoading(true);
 
     try {
-      const verifyResponse = await fetch('http://localhost:5000/verify-email', {
+      const verifyResponse = await fetch('http://localhost:5000/api/auth/verify-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ const HarfZaarResetPassword = () => {
   // Function to send OTP
   const sendOtp = async (email) => {
     try {
-      const otpResponse = await fetch('http://localhost:5000/forgot-password', {
+      const otpResponse = await fetch('http://localhost:5000/api/auth/forgot-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ const HarfZaarResetPassword = () => {
 
   const handleSubmitOtp = async (otp) => {
     try {
-      const response = await fetch('http://localhost:5000/verify-otp', {
+      const response = await fetch('http://localhost:5000/api/auth/verify-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ const HarfZaarResetPassword = () => {
 
   const handleSubmitPassword = async (newPassword) => {
     try {
-      const response = await fetch('http://localhost:5000/change-password', {
+      const response = await fetch('http://localhost:5000/api/auth/change-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

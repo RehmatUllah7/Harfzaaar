@@ -41,9 +41,8 @@ const HarfZaarLogin = () => {
   
     setLoading(true); // Set loading to true when the request starts
   
-
     try {
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,6 +57,8 @@ const HarfZaarLogin = () => {
 
       if (response.ok) {
         localStorage.setItem('authToken', data.token);
+        localStorage.setItem('userId', data.userId);
+        localStorage.setItem('username', data.username);
         navigate('/home'); // Redirect to the dashboard or desired page
       } else {
         setErrorMessage(data.message || 'Login failed');
@@ -163,7 +164,7 @@ const HarfZaarLogin = () => {
         </form>
 
         <p className="mt-6 text-gray-300 text-center">
-          Don’t have a HarfZaar account?{' '}
+          Don't have a HarfZaar account?{' '}
           <Link
             to="/signup"
             className="text-blue-400 hover:text-blue-600 underline transition duration-300"

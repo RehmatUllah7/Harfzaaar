@@ -41,16 +41,12 @@ const ContinueViaPassword = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/change-passwordviapassword', {
+      const response = await fetch('http://localhost:5000/api/auth/change-passwordviapassword', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email,
-          oldPassword: previousPassword,
-          newPassword,
-        }),
+        body: JSON.stringify({ email, currentPassword: previousPassword, newPassword }),
       });
 
       const data = await response.json();

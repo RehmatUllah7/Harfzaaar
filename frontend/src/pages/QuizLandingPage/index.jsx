@@ -20,7 +20,7 @@ const QuizLandingPage = () => {
         console.log("Fetched Questions:", data.questions);
         navigate("/quizpages", { state: { questions: data.questions } });
       } else {
-        alert("Failed to fetch quiz questions. Please try again.");
+        alert("Check your internet connection and try again.");
       }
     } catch (error) {
       console.error("Error:", error);

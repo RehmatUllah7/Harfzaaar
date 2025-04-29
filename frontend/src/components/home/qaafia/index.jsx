@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import Header from "../Header";
 import Footer from "@/components/home/footer";
-
+import toast from "react-hot-toast"; // ✅ Import toast
 function QaafiyaSection() {
   const [firstQaafia, setFirstQaafia] = useState("");
   const [secondQaafia, setSecondQaafia] = useState("");
@@ -61,7 +61,7 @@ function QaafiyaSection() {
         );
       }
     } catch (error) {
-      setErrorMessage("Unable to connect to the server");
+       toast.error("Unable to connect to server!")
       setSearchResults([]);
     } finally {
       setLoading(false);
@@ -84,7 +84,10 @@ function QaafiyaSection() {
       <Header />
       <div className="mx-auto px-6 py-12">
         <h2 className="text-4xl font-bold text-center text-purple-400 mb-8">Search Qaafiya</h2>
-        
+        <p className="text-center text-purple-200 italic mb-8">
+      "In every letter, there's a melody; in every rhyme, there's a secret."
+    </p>
+
 
          {/* Search Fields */}
          <div className="flex flex-col items-center justify-center">

@@ -20,7 +20,7 @@ const Footer = () => {
           <h2 className="text-2xl font-extrabold mb-4">Quick Links</h2>
           <ul className="space-y-3">
             <li>
-              <a href="/" className="text-gray-300 hover:text-white transition-all duration-200">Poetry Collections</a>
+              <a href="/poets" className="text-gray-300 hover:text-white transition-all duration-200">Poetry Collections</a>
             </li>
             <li>
               <a href="/poets" className="text-gray-300 hover:text-white transition-all duration-200">Poet Biographies</a>

@@ -7,6 +7,8 @@ import { forgotPassword } from '../controllers/authController.js';
 import { verifyOtp } from '../controllers/authController.js';
 import { changePassword } from '../controllers/authController.js';
 import { verifyEmail } from '../controllers/authController.js';
+// authRoutes.js
+
 
 
 // Route to handle sending OTP

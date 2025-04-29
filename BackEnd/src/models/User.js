@@ -1,45 +1,61 @@
-import { Schema, model } from 'mongoose';
-import bcrypt from 'bcryptjs';  // Default import
-const { genSalt, hash, compare } = bcrypt;  // Destructure the methods from bcrypt
-import mongoose from "mongoose"; // ✅ Import mongoose
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
-    unique: true,
+    unique: true
   },
   email: {
     type: String,
     required: true,
-    unique: true,
+    unique: true
   },
   password: {
     type: String,
-    required: true,
+    required: true
+  },
+  isActive: {
+    type: Boolean,
+    default: false
+  },
+  lastActivity: {
+    type: Date,
+    default: Date.now
+  },
+  role: {
+    type: String,
+    enum: ['user', 'poet', 'admin'],
+    default: 'user'
   },
   otp: {
     code: { type: String },
     expiry: { type: Date },
   },
   favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: "Poetry" }], // Store poetry IDs
+}, {
+  timestamps: true
 });
 
-// Hash the password before saving the user
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
-    return next();
+// Hash password before saving
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+  
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error);
   }
-  const salt = await genSalt(10);
-  this.password = await hash(this.password, salt);
-  next();
 });
 
-// Compare password method
-userSchema.methods.matchPassword = async function (enteredPassword) {
-  return await compare(enteredPassword, this.password);
+// Method to compare passwords
+userSchema.methods.matchPassword = async function(enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
 };
 
-const User = model('User', userSchema);
+const User = mongoose.model('User', userSchema);
 
 export default User;

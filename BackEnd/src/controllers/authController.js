@@ -188,14 +188,18 @@ export const loginUser = async (req, res) => {
   if (!isPasswordMatch) {
     return res.status(400).json({ message: 'Invalid credentials' });
   }
+  //make user status active
+  user.isActive = true;
+  await user.save();
   // Generate JWT token using the 'sign' function from jwt
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
   res.status(200).json({
     message: 'Login successful',
     token,
+    userId: user._id,
+    username: user.username
   });
 };
-
 
 // New function to get user info
 export const getUserInfo = async (req, res) => {
@@ -226,6 +230,7 @@ export const getUserInfo = async (req, res) => {
     return res.status(400).json({ message: 'Invalid or expired token' });
   }
 };
+
 
 
 export const registerUser = async (req, res) => {
@@ -259,3 +264,5 @@ export const registerUser = async (req, res) => {
     res.status(500).json({ error: 'Error registering user', details: err.message });
   }
 };
+
+

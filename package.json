@@ -10,11 +10,22 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "concurrently": "^9.1.0"
+    "concurrently": "^9.1.2"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.30.0",
+    "@emoji-mart/data": "^1.2.1",
+    "@emoji-mart/react": "^1.1.1",
     "@headlessui/react": "^2.2.0",
+    "date-fns": "^4.1.0",
     "fasttext.js": "^1.1.4",
-    "react-toastify": "^11.0.5"
+    "framer-motion": "^12.9.2",
+    "fuse.js": "^7.1.0",
+    "node-cron": "^3.0.3",
+    "react-hot-toast": "^2.5.2",
+    "react-icons": "^5.5.0",
+    "react-speech-recognition": "^4.0.0",
+    "react-toastify": "^11.0.5",
+    "zustand": "^5.0.3"
   }
 }

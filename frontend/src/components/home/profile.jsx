@@ -4,13 +4,13 @@ import pic from "../../assets/images/profile.png.png";
 const Profile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoggingOut, setIsLoggingOut] = useState(false); // New: logout loader
 
   const toggleDropdown = async () => {
     setIsOpen(!isOpen);
 
     if (!isOpen) {
-      // Fetch user info only when opening the dropdown
       await fetchUserInfo();
     }
   };
@@ -20,36 +20,63 @@ const Profile = () => {
   };
 
   const fetchUserInfo = async () => {
-    const token = localStorage.getItem("authToken"); // Retrieve the token from local storage
+    const token = localStorage.getItem('authToken');
 
     if (!token) {
-      setErrorMessage("You are not logged in.");
+      setErrorMessage('You are not logged in.');
       return;
     }
 
     try {
-      const response = await fetch("http://localhost:5000/user-info", {
-        method: "GET",
+      const response = await fetch('http://localhost:5000/api/auth/user-info', {
+        method: 'GET',
         headers: {
-          Authorization: `Bearer ${token}`, // Send the token in the header
+          'Authorization': `Bearer ${token}`,
         },
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setUserInfo(data); // Set user info in state
-        setErrorMessage("");
+        setUserInfo(data);
+        setErrorMessage('');
       } else {
-        setErrorMessage(data.message || "Failed to fetch user info.");
+        setErrorMessage(data.message || 'Failed to fetch user info.');
       }
     } catch (error) {
-      setErrorMessage("An error occurred. Please try again later.");
+      setErrorMessage('An error occurred. Please try again later.');
     }
   };
 
-  const goToHome = () => {
-    window.location.href = "/";
+  const handleLogout = async () => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      window.location.href = '/'; // already logged out
+      return;
+    }
+
+    try {
+      setIsLoggingOut(true); // show loading
+
+      const response = await fetch('http://localhost:5000/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        localStorage.removeItem('authToken'); // Clear token
+        localStorage.removeItem('username');  // Clear any other user info
+        window.location.href = '/'; // Redirect home
+      } else {
+        console.error('Failed to logout properly.');
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setIsLoggingOut(false); // stop loading
+    }
   };
 
   return (
@@ -60,7 +87,11 @@ const Profile = () => {
         onClick={toggleDropdown}
         className="inline-block w-10 h-10 rounded-full overflow-hidden border-2 border-white cursor-pointer hover:scale-105 transition-transform"
       >
-        <img src={pic} alt="Profile" className="w-full h-full object-cover" />
+        <img
+          src={pic}
+          alt="Profile"
+          className="w-full h-full object-cover"
+        />
       </a>
 
       {/* Dropdown Menu */}
@@ -77,11 +108,9 @@ const Profile = () => {
           {/* Name Section */}
           <div className="py-4 px-4 text-xl font-semibold text-gray-800">
             {errorMessage ? (
-              <p style={{ color: "red" }}>{errorMessage}</p>
-            ) : userInfo && userInfo.username ? (
-              capitalizeName(userInfo.username)
+              <p className="text-red-500">{errorMessage}</p>
             ) : (
-              "Loading..."
+              userInfo && userInfo.username ? capitalizeName(userInfo.username) : 'Loading...'
             )}
           </div>
           <hr className="border-gray-300" />
@@ -95,29 +124,26 @@ const Profile = () => {
               Favourites
             </a>
             <a
-              href="#recitations"
+              href="/recitations"
               className="relative block py-2 px-4 text-gray-600 hover:bg-purple-500 hover:text-white transition-all hover:translate-x-3"
             >
               Recitations
             </a>
             <a
-              href="#edit-profile"
+              href="/edit-profile"
               className="relative block py-2 px-4 text-gray-600 hover:bg-purple-500 hover:text-white transition-all hover:translate-x-3"
             >
               Edit Profile
             </a>
-            <a
-              href="/becomepoet"
-              className="relative block py-2 px-4 text-gray-600 hover:bg-purple-500 hover:text-white transition-all hover:translate-x-3"
+            <button
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className={`relative w-full text-left block py-2 px-4 ${
+                isLoggingOut ? 'text-gray-400' : 'text-gray-600 hover:bg-purple-500 hover:text-white'
+              } transition-all hover:translate-x-3`}
             >
-              Become a Poet
-            </a>
-            <a
-              onClick={goToHome}
-              className="relative block py-2 px-4 text-gray-600 hover:bg-purple-500 hover:text-white transition-all hover:translate-x-3 cursor-pointer"
-            >
-              Logout
-            </a>
+              {isLoggingOut ? 'Logging out...' : 'Logout'}
+            </button>
           </div>
         </div>
       )}
@@ -127,7 +153,8 @@ const Profile = () => {
 
 export default Profile;
 
+// Capitalize First Letter
 const capitalizeName = (name) => {
-  if (!name) return ""; // Handle empty or undefined names
+  if (!name) return '';
   return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 };
