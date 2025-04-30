@@ -11,7 +11,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 // Harfzaar AI prompt: an Urdu poetry and literary expert with an elegant tone
 const systemPrompt = `
 You are Harfzaar AI, an expert assistant in Urdu poetry, ghazals, literary figures, and cultural history.
-Always reply in an elegant yet simple tone. When possible, use poetic references to enhance responses.only respond in urdu.
+Always reply in an elegant yet simple tone. When possible, use poetic references to enhance responses.only respond in urdu and in urdu characters.
 Avoid casual internet slang.
 `;
 
@@ -35,10 +35,7 @@ router.post("/", async (req, res) => {
     });
 
     let reply = result.response.candidates?.[0]?.content?.parts?.[0]?.text || '';
-
-    // Remove Markdown-style bold (**text**) if present
     reply = reply.replace(/\*\*(.*?)\*\*/g, '$1');
-    console.log("ChatBot Rerply:", reply);
     res.json({ reply });
   } catch (error) {
     console.error("Gemini Chatbot Error:", error);
