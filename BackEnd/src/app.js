@@ -14,6 +14,7 @@ import poetryRoutes from "./routes/poetryRoutes.js";
 import searchRoutes from "./routes/search.js";
 import deepseekRoutes from "./routes/deepseek.js";
 import chatRoutes from "./routes/chatRoutes.js";
+import chatbotRoute from "./routes/chatbot.js";
 import './cron.js';  
 
 // Load environment variables
@@ -95,6 +96,7 @@ app.use("/api/ghazals", ghazalRoutes);
 app.use("/api/poetry", poetryRoutes);
 app.use("/api", searchRoutes);
 app.use("/api/deepseek", deepseekRoutes);
+app.use('/api/chatbot', chatbotRoute); 
 
 // --- 404 Not Found Handler ---
 app.use((req, res, next) => {
