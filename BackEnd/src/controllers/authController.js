@@ -197,7 +197,8 @@ export const loginUser = async (req, res) => {
     message: 'Login successful',
     token,
     userId: user._id,
-    username: user.username
+    username: user.username,
+    role: user.role
   });
 };
 
@@ -214,20 +215,28 @@ export const getUserInfo = async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.userId;
 
-    // Fetch user information from the database
-    const user = await User.findById(userId).select('username email');  // Select only username and email
+    // Fetch user information from the database with more fields
+    const user = await User.findById(userId).select('username email role isActive lastActivity');
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Return the user info
+    // Return the user info with additional fields
     res.status(200).json({
+      userId: user._id,
       username: user.username,
       email: user.email,
+      role: user.role,
+      isActive: user.isActive,
+      lastActivity: user.lastActivity
     });
   } catch (error) {
-    return res.status(400).json({ message: 'Invalid or expired token' });
+    console.error('Error in getUserInfo:', error);
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'Token expired' });
+    }
+    return res.status(400).json({ message: 'Invalid token' });
   }
 };
 

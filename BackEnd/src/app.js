@@ -16,6 +16,7 @@ import deepseekRoutes from "./routes/deepseek.js";
 import chatRoutes from "./routes/chatRoutes.js";
 import chatbotRoute from "./routes/chatbot.js";
 import './cron.js';  
+import poetRoutes from './routes/poet.js';
 
 // Load environment variables
 config();
@@ -85,7 +86,11 @@ app.use(cors({
 }));
 
 // --- Body Parser ---
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static('uploads'));
 
 // --- Routes ---
 app.use("/api/auth", authRoutes);
@@ -97,6 +102,7 @@ app.use("/api/poetry", poetryRoutes);
 app.use("/api", searchRoutes);
 app.use("/api/deepseek", deepseekRoutes);
 app.use('/api/chatbot', chatbotRoute); 
+app.use('/api/poets', poetRoutes);
 
 // --- 404 Not Found Handler ---
 app.use((req, res, next) => {

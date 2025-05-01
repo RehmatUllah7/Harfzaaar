@@ -1,11 +1,13 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import pic from "../../assets/images/profile.png.png";
 
 const Profile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
-  const [isLoggingOut, setIsLoggingOut] = useState(false); // New: logout loader
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const navigate = useNavigate();
 
   const toggleDropdown = async () => {
     setIsOpen(!isOpen);
@@ -21,6 +23,7 @@ const Profile = () => {
 
   const fetchUserInfo = async () => {
     const token = localStorage.getItem('authToken');
+    const username = localStorage.getItem('username');
 
     if (!token) {
       setErrorMessage('You are not logged in.');
@@ -38,25 +41,40 @@ const Profile = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setUserInfo(data);
+        setUserInfo({
+          ...data,
+          username: username || data.username // Use stored username if available
+        });
         setErrorMessage('');
       } else {
-        setErrorMessage(data.message || 'Failed to fetch user info.');
+        // If API call fails but we have username in localStorage, still show it
+        if (username) {
+          setUserInfo({ username });
+          setErrorMessage('');
+        } else {
+          setErrorMessage(data.message || 'Failed to fetch user info.');
+        }
       }
     } catch (error) {
-      setErrorMessage('An error occurred. Please try again later.');
+      // If API call fails but we have username in localStorage, still show it
+      if (username) {
+        setUserInfo({ username });
+        setErrorMessage('');
+      } else {
+        setErrorMessage('An error occurred. Please try again later.');
+      }
     }
   };
 
   const handleLogout = async () => {
     const token = localStorage.getItem('authToken');
     if (!token) {
-      window.location.href = '/'; // already logged out
+      navigate('/');
       return;
     }
 
     try {
-      setIsLoggingOut(true); // show loading
+      setIsLoggingOut(true);
 
       const response = await fetch('http://localhost:5000/api/auth/logout', {
         method: 'POST',
@@ -66,41 +84,33 @@ const Profile = () => {
       });
 
       if (response.ok) {
-        // Clear all local storage items
         localStorage.removeItem('authToken');
         localStorage.removeItem('userId');
         localStorage.removeItem('username');
-        
-        // Close the dropdown
         setIsOpen(false);
-        
-        // Redirect to home page
-        window.location.href = '/';
+        navigate('/');
       } else {
         console.error('Failed to logout properly.');
-        // Still clear local storage and redirect even if server request fails
         localStorage.removeItem('authToken');
         localStorage.removeItem('userId');
         localStorage.removeItem('username');
-        window.location.href = '/';
+        navigate('/');
       }
     } catch (error) {
       console.error('Logout error:', error);
-      // Still clear local storage and redirect even if there's an error
       localStorage.removeItem('authToken');
       localStorage.removeItem('userId');
       localStorage.removeItem('username');
-      window.location.href = '/';
+      navigate('/');
     } finally {
-      setIsLoggingOut(false); // stop loading
+      setIsLoggingOut(false);
     }
   };
 
   return (
     <div className="relative">
       {/* Profile Picture Section */}
-      <a
-        href="#profile"
+      <button
         onClick={toggleDropdown}
         className="inline-block w-10 h-10 rounded-full overflow-hidden border-2 border-white cursor-pointer hover:scale-105 transition-transform"
       >
@@ -109,7 +119,7 @@ const Profile = () => {
           alt="Profile"
           className="w-full h-full object-cover"
         />
-      </a>
+      </button>
 
       {/* Dropdown Menu */}
       {isOpen && (
@@ -134,24 +144,30 @@ const Profile = () => {
 
           {/* Menu Items */}
           <div className="px-4 py-2">
-            <a
-              href="/favourites"
+            <Link
+              to="/favourites"
               className="relative block py-2 px-4 text-gray-600 hover:bg-purple-500 hover:text-white transition-all hover:translate-x-3"
             >
               Favourites
-            </a>
-            <a
-              href="/recitations"
+            </Link>
+            <Link
+              to="/recitations"
               className="relative block py-2 px-4 text-gray-600 hover:bg-purple-500 hover:text-white transition-all hover:translate-x-3"
             >
               Recitations
-            </a>
-            <a
-              href="/edit-profile"
+            </Link>
+            <Link
+              to="/becomepoet"
+              className="relative block py-2 px-4 text-gray-600 hover:bg-purple-500 hover:text-white transition-all hover:translate-x-3"
+            >
+              Become a Poet
+            </Link>
+            <Link
+              to="/edit-profile"
               className="relative block py-2 px-4 text-gray-600 hover:bg-purple-500 hover:text-white transition-all hover:translate-x-3"
             >
               Edit Profile
-            </a>
+            </Link>
             <button
               onClick={handleLogout}
               disabled={isLoggingOut}

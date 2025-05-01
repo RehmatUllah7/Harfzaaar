@@ -59,7 +59,14 @@ const HarfZaarLogin = () => {
         localStorage.setItem('authToken', data.token);
         localStorage.setItem('userId', data.userId);
         localStorage.setItem('username', data.username);
-        navigate('/home'); // Redirect to the dashboard or desired page
+        localStorage.setItem('role', data.role); // Store the user's role
+        
+        // Navigate based on role
+        if (data.role === 'poet') {
+          navigate('/bazm'); // Navigate to poet dashboard
+        } else {
+          navigate('/home'); // Navigate to regular home page
+        }
       } else {
         setErrorMessage(data.message || 'Login failed');
       }

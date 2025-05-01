@@ -27,6 +27,7 @@ import { ImageSearchProvider } from '../src/context/ImageSearchContext'; // impo
 import SearchResults from './pages/SearchResults';
 import VoiceSearch from './pages/VoiceSearch';
 import ChatbotPage from './pages/ChatbotPage';
+import BecomePoet2 from './pages/BecomePoet2';
 
 function App() {
   return (
@@ -77,6 +78,7 @@ function App() {
                  {/* Quiz Results Page */}
            <Route path="/quizresults" element={<ResultPage />} />
            <Route path='/becomepoet' element={<BecomePoet />} />
+           <Route path='/becomepoet2' element={<BecomePoet2 />} />
            <Route path='/bazm' element={<Bazm />} />
         
 
