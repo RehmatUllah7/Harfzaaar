@@ -17,6 +17,8 @@ import chatRoutes from "./routes/chatRoutes.js";
 import chatbotRoute from "./routes/chatbot.js";
 import './cron.js';  
 import poetRoutes from './routes/poet.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Load environment variables
 config();
@@ -26,6 +28,12 @@ connectDB();
 
 // Create express app
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve static files from 'uploads' directory
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 const httpServer = createServer(app);
 
 // Socket.IO setup

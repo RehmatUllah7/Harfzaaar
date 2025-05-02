@@ -147,3 +147,12 @@ export const submitPoetDetails = async (req, res) => {
     });
   }
 };
+// Get all poets
+export const getAllPoets = async (req, res) => {
+  try {
+    const poets = await Poet.find();
+    res.status(200).json(poets);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch poets" });
+  }
+};

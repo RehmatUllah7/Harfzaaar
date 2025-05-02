@@ -155,7 +155,7 @@ const BecomePoet = () => {
 
         <form className="space-y-4">
           <div>
-            <label className="block text-gray-700 font-semibold">Poet Name (English Only)</label>
+            <label className="block text-gray-700 font-semibold">Poet Name</label>
             <input
               type="text"
               name="poetName"
@@ -185,7 +185,7 @@ const BecomePoet = () => {
           </div>
 
           <div>
-            <label className="block text-gray-700 font-semibold">Poetry Title (Urdu Only)</label>
+            <label className="block text-gray-700 font-semibold">Poetry Title</label>
             <input
               type="text"
               name="poetryTitle"
@@ -201,7 +201,7 @@ const BecomePoet = () => {
           </div>
 
           <div>
-            <label className="block text-gray-700 font-semibold">Your Poetry (Urdu Only)</label>
+            <label className="block text-gray-700 font-semibold">Your Poetry</label>
             <textarea
               name="poetryContent"
               value={formData.poetryContent}

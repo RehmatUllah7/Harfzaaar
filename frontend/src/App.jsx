@@ -10,6 +10,7 @@ import { Toaster } from 'react-hot-toast';
 import News from './components/home/news';
 import ChatbotButton from './components/ChatbotButton';
 
+
 import Slideimg from './components/home/Slideimg';
 import Home from './components/home/homePage';
 import QuizLandingPage from './pages/QuizLandingPage';
@@ -28,6 +29,7 @@ import SearchResults from './pages/SearchResults';
 import VoiceSearch from './pages/VoiceSearch';
 import ChatbotPage from './pages/ChatbotPage';
 import BecomePoet2 from './pages/BecomePoet2';
+
 
 function App() {
   return (
@@ -63,6 +65,7 @@ function App() {
 
           <Route path="/poets" element={<Poets />} />
           <Route path="/poets/:poetName" element={<PoetDetail />} />
+         
 
           <Route path='/news' element={<News/>}/>
           <Route path='/qaafia' element={<Qaafia/>}/>
@@ -84,6 +87,7 @@ function App() {
 
          <Route path="/is" element={<ImageSearchPage />} />
          <Route path="/voicesearch" element={<VoiceSearch />} />
+         
         </Routes>
         <ChatbotButton />
         <Routes>
