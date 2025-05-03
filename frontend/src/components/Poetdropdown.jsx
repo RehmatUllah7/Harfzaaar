@@ -1,6 +1,6 @@
 
 import { Link, useNavigate } from "react-router-dom";
-import pic from "../../assets/images/profile.png.png";
+import pic from "../assets/images/profile.png.png";
 import React, { useState, useEffect, useRef } from "react";
 
 const Profile = () => {
@@ -159,12 +159,7 @@ const Profile = () => {
 
           {/* Menu Items */}
           <div className="px-4 py-2">
-          <Link
-              to="/becomepoet"
-              className="relative block py-2 px-4 text-gray-600 hover:bg-purple-500 hover:text-white transition-all hover:translate-x-3"
-            >
-              Become a Poet
-            </Link>
+        
            
             <Link
               to="/viapassword"

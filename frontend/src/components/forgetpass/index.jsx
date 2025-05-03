@@ -183,6 +183,13 @@ const HarfZaarResetPassword = () => {
             >
               {isLoading ? 'Processing...' : 'RESET PASSWORD'}
             </button>
+            <button
+  onClick={() => navigate('/')}
+  className="absolute top-6 left-6 px-3 py-1 text-sm font-medium text-white bg-gray-700 hover:bg-gray-600 rounded-lg shadow"
+>
+  Go Back
+</button>
+
           </form>
         )}
       </div>

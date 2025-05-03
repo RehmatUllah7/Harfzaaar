@@ -63,7 +63,7 @@ const HarfZaarLogin = () => {
         
         // Navigate based on role
         if (data.role === 'poet') {
-          navigate('/bazm'); // Navigate to poet dashboard
+          navigate('/poetdashboard'); // Navigate to poet dashboard
         } else {
           navigate('/home'); // Navigate to regular home page
         }
@@ -152,7 +152,7 @@ const HarfZaarLogin = () => {
               </label>
             </div>
             <a
-              href="/resetoptions"
+              href="/reset"
               className="text-blue-400 hover:text-blue-600 underline transition duration-300"
             >
               Forgot Password?

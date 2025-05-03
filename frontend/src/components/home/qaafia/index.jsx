@@ -2,6 +2,10 @@ import React, { useState, useRef } from "react";
 import Header from "../Header";
 import Footer from "@/components/home/footer";
 import toast from "react-hot-toast"; // ✅ Import toast
+import { useEffect } from "react";
+import axios from "axios";
+import PoetHeader from "@/components/PoetHeader";
+
 function QaafiyaSection() {
   const [firstQaafia, setFirstQaafia] = useState("");
   const [secondQaafia, setSecondQaafia] = useState("");
@@ -9,6 +13,7 @@ function QaafiyaSection() {
   const [raviPattern, setRaviPattern] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isPoet, setIsPoet] = useState(false);
 
   // Refs for scrolling
   const introductionRef = useRef(null);
@@ -18,6 +23,32 @@ function QaafiyaSection() {
     const urduRegex = /^[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF ]+$/;
     return urduRegex.test(text);
   };
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const token = localStorage.getItem("authToken"); // Retrieve token using the correct key
+        if (!token) {
+          console.error("Token not found");
+          return;
+        }
+
+        const response = await axios.get("http://localhost:5000/api/auth/user-info", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true, // Ensure cookies are sent for authentication
+        });
+
+        const userRole = response.data.role;
+        setIsPoet(userRole === "poet");
+      } catch (error) {
+        console.error("Failed to fetch user role", error);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
+
 
   const findMatchingSuffix = (word1, word2) => {
     let minLength = Math.min(word1.length, word2.length);
@@ -81,7 +112,7 @@ function QaafiyaSection() {
 
   return (
     <div className="bg-gradient-to-r from-gray-900 via-black to-purple-900 min-h-screen text-white">
-      <Header />
+    {isPoet ? <PoetHeader /> : <Header />}
       <div className="mx-auto px-6 py-12">
         <h2 className="text-4xl font-bold text-center text-purple-400 mb-8">Search Qaafiya</h2>
         <p className="text-center text-purple-200 italic mb-8">

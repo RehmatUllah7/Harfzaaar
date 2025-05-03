@@ -3,18 +3,45 @@ import { useNavigate } from "react-router-dom";
 import { useImageSearch } from "../../context/ImageSearchContext";
 import { FaBookOpen, FaSearch, FaChevronDown } from "react-icons/fa";
 import { motion } from "framer-motion";
-
+import axios from "axios";
 const ImageSearchResults = () => {
   const { imageData, clearImageData } = useImageSearch();
   const navigate = useNavigate();
   const [visibleCount, setVisibleCount] = useState(12); // Start with 12 results
   const increment = 6; // Load 6 more each time
+  const [isPoet, setIsPoet] = useState(false);
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const token = localStorage.getItem("authToken"); // Retrieve token using the correct key
+        if (!token) {
+          console.error("Token not found");
+          return;
+        }
+
+        const response = await axios.get("http://localhost:5000/api/auth/user-info", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true, // Ensure cookies are sent for authentication
+        });
+
+        const userRole = response.data.role;
+        setIsPoet(userRole === "poet");
+      } catch (error) {
+        console.error("Failed to fetch user role", error);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
 
   useEffect(() => {
-    if (!imageData) {
-      navigate("/home");
+    if (!imageData && isPoet !== null) {
+      navigate(isPoet ? "/poetdashboard" : "/home");
     }
-  }, [imageData, navigate]);
+  }, [imageData, isPoet, navigate]);
+  
 
   const formatPoetName = (name) => {
     return name.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());

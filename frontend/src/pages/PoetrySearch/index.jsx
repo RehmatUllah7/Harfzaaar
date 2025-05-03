@@ -12,14 +12,38 @@ const PoetrySearch = () => {
   const [selectedPoetry, setSelectedPoetry] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
-
+  const [isPoet, setIsPoet] = useState(false);
   // Fetch filter data
   useEffect(() => {
     axios.get("http://localhost:5000/api/ghazals/poets").then((res) => setPoets(res.data));
     axios.get("http://localhost:5000/api/ghazals/genres").then((res) => setGenres(res.data));
     axios.get("http://localhost:5000/api/ghazals/domains").then((res) => setDomains(res.data));
   }, []);
+ useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const token = localStorage.getItem("authToken"); // Retrieve token using the correct key
+        if (!token) {
+          console.error("Token not found");
+          return;
+        }
 
+        const response = await axios.get("http://localhost:5000/api/auth/user-info", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true, // Ensure cookies are sent for authentication
+        });
+
+        const userRole = response.data.role;
+        setIsPoet(userRole === "poet");
+      } catch (error) {
+        console.error("Failed to fetch user role", error);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
   const handleSearch = () => {
     let query = `?poet=${selectedPoet}&genre=${selectedGenre}&domain=${selectedDomain}`;
     axios.get(`http://localhost:5000/api/ghazals/search${query}`)

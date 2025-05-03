@@ -19,6 +19,7 @@ import './cron.js';
 import poetRoutes from './routes/poet.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import newsRoute from "./routes/newsRoutes.js";
 
 // Load environment variables
 config();
@@ -99,6 +100,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Serve static files from uploads directory
 app.use('/uploads', express.static('uploads'));
+app.use("/api/news", newsRoute);
 
 // --- Routes ---
 app.use("/api/auth", authRoutes);

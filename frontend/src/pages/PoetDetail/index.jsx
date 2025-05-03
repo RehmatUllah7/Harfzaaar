@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import poetsData from "../../data/poetsData";
 import Header from "@/components/home/Header";
+import PoetHeader from "@/components/PoetHeader";
 
 const PoetDetails = () => {
   const { poetName } = useParams();
@@ -13,7 +14,7 @@ const PoetDetails = () => {
   const [selectedGhazal, setSelectedGhazal] = useState(null);
   const [visibleCount, setVisibleCount] = useState(14);
   const [expandedBio, setExpandedBio] = useState(false);
-
+const [isPoet, setIsPoet] = useState(false);
   // Helper function to get correct image path
   const getImagePath = (image) => {
     if (!image) return ''; // Handle undefined case
@@ -30,6 +31,33 @@ const PoetDetails = () => {
   };
 
   useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const token = localStorage.getItem("authToken"); // Retrieve token using the correct key
+        if (!token) {
+          console.error("Token not found");
+          return;
+        }
+
+        const response = await axios.get("http://localhost:5000/api/auth/user-info", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true, // Ensure cookies are sent for authentication
+        });
+
+        const userRole = response.data.role;
+        setIsPoet(userRole === "poet");
+      } catch (error) {
+        console.error("Failed to fetch user role", error);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
+
+  useEffect(() => {
+    
     const fetchPoetData = async () => {
       setLoading(true);
       try {
@@ -98,7 +126,7 @@ const PoetDetails = () => {
 
   return (
     <div className="bg-gradient-to-r from-gray-900 via-black to-purple-900 min-h-screen text-white">
-      <Header />
+      {isPoet ? <PoetHeader /> : <Header />}
       <div className="min-h-screen bg-gradient-to-r from-gray-900 via-black to-purple-900 text-white p-10">
         {loading ? (
           <div className="text-center text-gray-300">

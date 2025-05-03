@@ -5,7 +5,8 @@ import Header from '../../components/home/Header';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiSend, FiSmile, FiSearch } from 'react-icons/fi';
 import EmojiPicker from '../../components/EmojiPicker';
-
+import axios from "axios";
+import PoetHeader from "@/components/PoetHeader";
 const Bazm = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
@@ -27,6 +28,33 @@ const Bazm = () => {
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
   const emojiPickerRef = useRef(null);
+  const [isPoet, setIsPoet] = useState(false);
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const token = localStorage.getItem("authToken"); // Retrieve token using the correct key
+        if (!token) {
+          console.error("Token not found");
+          return;
+        }
+
+        const response = await axios.get("http://localhost:5000/api/auth/user-info", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true, // Ensure cookies are sent for authentication
+        });
+
+        const userRole = response.data.role;
+        setIsPoet(userRole === "poet");
+      } catch (error) {
+        console.error("Failed to fetch user role", error);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
+
 
   useEffect(() => {
     // Initialize socket connection
@@ -450,7 +478,7 @@ const Bazm = () => {
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-gray-900 to-gray-800">
-      <Header />
+     {isPoet ? <PoetHeader /> : <Header />}
       <div className="flex flex-1 overflow-hidden p-4 gap-4">
         {/* Active Users Sidebar */}
         <motion.div 

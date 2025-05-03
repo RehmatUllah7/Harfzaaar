@@ -1,15 +1,45 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import Header from '@/components/home/Header';
+import PoetHeader from '@/components/PoetHeader';
 
 const ChatbotPage = () => {
   const [message, setMessage] = useState('');
+  const [isPoet, setIsPoet] = useState(false);
+
   const [chatHistory, setChatHistory] = useState(() => {
     const savedHistory = localStorage.getItem('chatbotHistory');
     return savedHistory ? JSON.parse(savedHistory) : [];
   });
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef(null);
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const token = localStorage.getItem("authToken"); // Retrieve token using the correct key
+        if (!token) {
+          console.error("Token not found");
+          return;
+        }
+
+        const response = await axios.get("http://localhost:5000/api/auth/user-info", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true, // Ensure cookies are sent for authentication
+        });
+
+        const userRole = response.data.role;
+        setIsPoet(userRole === "poet");
+      } catch (error) {
+        console.error("Failed to fetch user role", error);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
+
+
 
   // Save chat history to localStorage whenever it changes
   useEffect(() => {
@@ -42,7 +72,7 @@ const ChatbotPage = () => {
 
   return (
     <div className="bg-gradient-to-br from-gray-900 via-purple-900 to-black min-h-screen text-white relative">
-      <Header />
+     {isPoet ? <PoetHeader /> : <Header />}
       <div className="max-w-3xl mx-auto pt-24 px-4">
         <div className="bg-black/30 backdrop-blur-lg border border-white/10 shadow-xl rounded-3xl p-8">
           <h1 className="text-4xl font-bold mb-6 text-transparent bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-center">

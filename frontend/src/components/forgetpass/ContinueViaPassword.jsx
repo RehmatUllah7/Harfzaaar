@@ -123,6 +123,13 @@ const ContinueViaPassword = () => {
           >
             {isLoading ? 'Processing...' : 'CHANGE PASSWORD'}
           </button>
+          {/* Go Back Button */}
+<button
+  onClick={() => navigate((-1))}
+  className="w-full mt-4 px-4 py-3 text-lg font-semibold text-white bg-gray-500 hover:bg-gray-600 rounded-lg shadow-md"
+>
+  Go Back
+</button>
         </form>
       </div>
     </div>

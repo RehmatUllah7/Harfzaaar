@@ -3,17 +3,45 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaBookOpen, FaChevronDown, FaSearch, FaArrowLeft, FaStar } from "react-icons/fa";
 import { RiQuillPenFill } from "react-icons/ri";
-
+import axios from "axios";
+import PoetHeader from "@/components/PoetHeader";
 const SearchResults = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [visibleCount, setVisibleCount] = useState(12);
   const increment = 6;
+  const [isPoet, setIsPoet] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
   const query = new URLSearchParams(location.search).get("query");
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const token = localStorage.getItem("authToken"); // Retrieve token using the correct key
+        if (!token) {
+          console.error("Token not found");
+          return;
+        }
+
+        const response = await axios.get("http://localhost:5000/api/auth/user-info", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true, // Ensure cookies are sent for authentication
+        });
+
+        const userRole = response.data.role;
+        setIsPoet(userRole === "poet");
+      } catch (error) {
+        console.error("Failed to fetch user role", error);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
+
 
   useEffect(() => {
     if (!query) {
@@ -44,7 +72,7 @@ const SearchResults = () => {
   };
 
   const handleNewSearch = () => {
-    navigate("/home");
+    navigate(isPoet ? "/poetdashboard" : "/home");
   };
 
   const displayedResults = searchResults.slice(0, visibleCount);

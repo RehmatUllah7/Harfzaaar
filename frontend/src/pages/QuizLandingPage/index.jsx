@@ -2,6 +2,7 @@ import Header from "@/components/home/Header";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 const QuizLandingPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);

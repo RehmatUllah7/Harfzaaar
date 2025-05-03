@@ -29,7 +29,9 @@ import SearchResults from './pages/SearchResults';
 import VoiceSearch from './pages/VoiceSearch';
 import ChatbotPage from './pages/ChatbotPage';
 import BecomePoet2 from './pages/BecomePoet2';
-
+import PoetDashboard from './pages/PoetDashBoard';
+import FeedbackPage from './pages/Feedback';
+import AddNewsPage from './pages/AddNews';
 
 function App() {
   return (
@@ -65,7 +67,7 @@ function App() {
 
           <Route path="/poets" element={<Poets />} />
           <Route path="/poets/:poetName" element={<PoetDetail />} />
-         
+         <Route path='/addnews' element={<AddNewsPage />} />'
 
           <Route path='/news' element={<News/>}/>
           <Route path='/qaafia' element={<Qaafia/>}/>
@@ -83,11 +85,12 @@ function App() {
            <Route path='/becomepoet' element={<BecomePoet />} />
            <Route path='/becomepoet2' element={<BecomePoet2 />} />
            <Route path='/bazm' element={<Bazm />} />
-        
+           <Route path="/feedback" element={<FeedbackPage />} />
+
 
          <Route path="/is" element={<ImageSearchPage />} />
          <Route path="/voicesearch" element={<VoiceSearch />} />
-         
+         <Route path='/poetdashboard' element={<PoetDashboard />} />
         </Routes>
         <ChatbotButton />
         <Routes>
