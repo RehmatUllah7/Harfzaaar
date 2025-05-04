@@ -69,7 +69,7 @@ const Header = () => {
 
       {/* Navigation Links */}
       <nav className="hidden sm:flex space-x-6 text-white">
-        {["Poets", "News", "Qaafia", "bsdk", "Bazm"].map((item) => (
+        {["Poets", "News", "Qaafia",  "Bazm"].map((item) => (
           <Link
             key={item}
             to={`/${item.toLowerCase()}`}

@@ -12,7 +12,12 @@ const PoetDashboard = () => {
   const handleAddPoetry = () => {
     navigate("/addpoetry");
   };
-  
+  const handleSukhanAlfaz = () => {
+    navigate("/sukhanalfaz");
+  };
+  const handleGirah = () => {
+    navigate("/girah");
+  };
   return (
     <div>
       <PoetHeader />
@@ -46,6 +51,24 @@ const PoetDashboard = () => {
             className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
           >
             Add News
+          </button>
+        </section>
+        <section>
+          <h2 className="text-xl font-semibold mb-2">News Management</h2>
+          <button
+            onClick={handleSukhanAlfaz}
+            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
+          >
+            Sukhan-Alfaz
+          </button>
+        </section>
+        <section>
+          <h2 className="text-xl font-semibold mb-2">News Management</h2>
+          <button
+            onClick={handleGirah}
+            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
+          >
+            Girah-Bandi
           </button>
         </section>
       </main>

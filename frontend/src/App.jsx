@@ -35,6 +35,8 @@ import AddNewsPage from './pages/AddNews';
 import AddPoetry from './pages/AddPoetry';
 import MyNewsPage from './pages/MyNews';
 import MyPoetryPage from './pages/MyPoetry';
+import SukhanAlfaz from './pages/SukhanAlfaz';
+import Girah from './pages/Girah';
 function App() {
   return (
     <div className="">
@@ -96,6 +98,17 @@ function App() {
          <Route path='/addpoetry' element={<AddPoetry />} />
          <Route path='/mynews' element={<MyNewsPage />} />
          <Route path='/mypoetry' element={<MyPoetryPage />} />
+         <Route path='/sukhanalfaz' element={<SukhanAlfaz />} />
+          <Route path="/slideimg" element={<Slideimg />} />
+          <Route path="/chatbot" element={<ChatbotPage />} />
+          <Route path="/image-search" element={<ImageSearchPage />} />
+          <Route path="/feedback" element={<FeedbackPage />} />
+          <Route path="/addnews" element={<AddNewsPage />} />
+          <Route path="/addpoetry" element={<AddPoetry />} />
+          <Route path="/mynews" element={<MyNewsPage />} />
+          <Route path="/mypoetry" element={<MyPoetryPage />} />
+          <Route path="/sukhanalfaz" element={<SukhanAlfaz />} />
+          <Route path='/girah' element={<Girah />} />
         </Routes>
         <ChatbotButton />
         <Routes>

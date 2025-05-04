@@ -4,7 +4,7 @@ import connectDB from "./config/dbConfig.js";
 import { config } from "dotenv";
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-
+import sukhanRoute from "./routes/SukhanRoute.js";
 // Route Imports
 import authRoutes from "./routes/authRoutes.js";
 import qaafiaRoutes from "./routes/qaafia.js";
@@ -21,6 +21,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import newsRoute from "./routes/newsRoutes.js";
 import addPoetryRoute from "./routes/addPoetryRoute.js";
+import girahRoute from "./routes/GirahRoute.js";
 // Load environment variables
 config();
 
@@ -113,7 +114,8 @@ app.use("/api", searchRoutes);
 app.use("/api/deepseek", deepseekRoutes);
 app.use('/api/chatbot', chatbotRoute); 
 app.use('/api/poets', poetRoutes);
-
+app.use('/api', sukhanRoute);
+app.use('/api/girah', girahRoute);
 // --- 404 Not Found Handler ---
 app.use((req, res, next) => {
   res.status(404).json({ message: 'Route not found' });
