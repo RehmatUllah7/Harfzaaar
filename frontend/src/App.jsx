@@ -33,7 +33,8 @@ import PoetDashboard from './pages/PoetDashBoard';
 import FeedbackPage from './pages/Feedback';
 import AddNewsPage from './pages/AddNews';
 import AddPoetry from './pages/AddPoetry';
-
+import MyNewsPage from './pages/MyNews';
+import MyPoetryPage from './pages/MyPoetry';
 function App() {
   return (
     <div className="">
@@ -93,6 +94,8 @@ function App() {
          <Route path="/voicesearch" element={<VoiceSearch />} />
          <Route path='/poetdashboard' element={<PoetDashboard />} />
          <Route path='/addpoetry' element={<AddPoetry />} />
+         <Route path='/mynews' element={<MyNewsPage />} />
+         <Route path='/mypoetry' element={<MyPoetryPage />} />
         </Routes>
         <ChatbotButton />
         <Routes>

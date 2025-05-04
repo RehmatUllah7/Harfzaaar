@@ -159,7 +159,18 @@ const Profile = () => {
 
           {/* Menu Items */}
           <div className="px-4 py-2">
-        
+          <Link
+              to="/mypoetry"
+              className="relative block py-2 px-4 text-gray-600 hover:bg-purple-500 hover:text-white transition-all hover:translate-x-3"
+            >
+              Manage My Poetry
+            </Link>
+          <Link
+              to="/mynews"
+              className="relative block py-2 px-4 text-gray-600 hover:bg-purple-500 hover:text-white transition-all hover:translate-x-3"
+            >
+              Manage My News
+            </Link>
            
             <Link
               to="/viapassword"

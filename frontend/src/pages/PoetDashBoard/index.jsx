@@ -12,6 +12,7 @@ const PoetDashboard = () => {
   const handleAddPoetry = () => {
     navigate("/addpoetry");
   };
+  
   return (
     <div>
       <PoetHeader />
@@ -37,7 +38,7 @@ const PoetDashboard = () => {
             Add poetry
           </button>
         </section>
-
+        
         <section>
           <h2 className="text-xl font-semibold mb-2">News Management</h2>
           <button

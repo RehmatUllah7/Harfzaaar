@@ -6,64 +6,84 @@ import PoetHeader from '@/components/PoetHeader';
 const ChatbotPage = () => {
   const [message, setMessage] = useState('');
   const [isPoet, setIsPoet] = useState(false);
-
-  const [chatHistory, setChatHistory] = useState(() => {
-    const savedHistory = localStorage.getItem('chatbotHistory');
-    return savedHistory ? JSON.parse(savedHistory) : [];
-  });
+  const [userId, setUserId] = useState(null); // Track user ID
+  const [chatHistory, setChatHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef(null);
+
   useEffect(() => {
-    const fetchUserRole = async () => {
+    const fetchUserInfo = async () => {
       try {
-        const token = localStorage.getItem("authToken"); // Retrieve token using the correct key
+        const token = localStorage.getItem("authToken");
         if (!token) {
           console.error("Token not found");
           return;
         }
 
         const response = await axios.get("http://localhost:5000/api/auth/user-info", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true, // Ensure cookies are sent for authentication
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
         });
 
-        const userRole = response.data.role;
-        setIsPoet(userRole === "poet");
+        setIsPoet(response.data.role === "poet");
+        setUserId(response.data.userId); // Store user ID
+        
+        // Load user-specific chat history
+        const userChatHistory = localStorage.getItem(`chatHistory_${response.data.userId}`);
+        if (userChatHistory) {
+          setChatHistory(JSON.parse(userChatHistory));
+        }
       } catch (error) {
-        console.error("Failed to fetch user role", error);
+        console.error("Failed to fetch user info", error);
       }
     };
 
-    fetchUserRole();
+    fetchUserInfo();
   }, []);
-
-
 
   // Save chat history to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('chatbotHistory', JSON.stringify(chatHistory));
-  }, [chatHistory]);
+    if (userId) {
+      localStorage.setItem(`chatHistory_${userId}`, JSON.stringify(chatHistory));
+    }
+  }, [chatHistory, userId]);
 
   const handleSend = async () => {
-    if (!message.trim()) return;
+    if (!message.trim() || !userId) return;
 
-    const userMessage = { type: 'user', text: message };
+    const userMessage = { type: 'user', text: message, timestamp: new Date().toISOString() };
     setChatHistory((prev) => [...prev, userMessage]);
     setLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:5000/api/chatbot', { message });
-      const botMessage = { type: 'bot', text: res.data.reply };
+      const res = await axios.post('http://localhost:5000/api/chatbot', { 
+        message,
+        userId // Send user ID with the message
+      });
+      const botMessage = { 
+        type: 'bot', 
+        text: res.data.reply,
+        timestamp: new Date().toISOString() 
+      };
       setChatHistory((prev) => [...prev, botMessage]);
       setMessage('');
     } catch (error) {
-      const errorMessage = { type: 'bot', text: 'جواب حاصل کرنے میں مسئلہ پیش آیا۔' };
+      const errorMessage = { 
+        type: 'bot', 
+        text: 'جواب حاصل کرنے میں مسئلہ پیش آیا۔',
+        timestamp: new Date().toISOString()
+      };
       setChatHistory((prev) => [...prev, errorMessage]);
     }
 
     setLoading(false);
+  };
+
+  const clearHistory = () => {
+    if (userId && window.confirm("Are you sure you want to clear your chat history?")) {
+      setChatHistory([]);
+      localStorage.removeItem(`chatHistory_${userId}`);
+    }
   };
 
   useEffect(() => {
@@ -72,12 +92,22 @@ const ChatbotPage = () => {
 
   return (
     <div className="bg-gradient-to-br from-gray-900 via-purple-900 to-black min-h-screen text-white relative">
-     {isPoet ? <PoetHeader /> : <Header />}
+      {isPoet ? <PoetHeader /> : <Header />}
       <div className="max-w-3xl mx-auto pt-24 px-4">
         <div className="bg-black/30 backdrop-blur-lg border border-white/10 shadow-xl rounded-3xl p-8">
-          <h1 className="text-4xl font-bold mb-6 text-transparent bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-center">
-            Chat with Harfzaar
-          </h1>
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-4xl font-bold text-transparent bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text">
+              Chat with Harfzaar
+            </h1>
+            {userId && (
+              <button 
+                onClick={clearHistory}
+                className="text-sm text-red-400 hover:text-red-300 transition-colors"
+              >
+                Clear History
+              </button>
+            )}
+          </div>
 
           {/* Chat History */}
           <div className="max-h-80 overflow-y-auto pr-2 space-y-4 custom-scrollbar py-2">
@@ -92,7 +122,10 @@ const ChatbotPage = () => {
                   }`}
                 style={{ wordSpacing: '0.21rem' }}
               >
-                {msg.text}
+                <div>{msg.text}</div>
+                <div className={`text-xs mt-1 opacity-70 ${msg.type === 'user' ? 'text-left' : 'text-right'}`}>
+                  {new Date(msg.timestamp).toLocaleTimeString()}
+                </div>
               </div>
             ))}
             <div ref={scrollRef} />
@@ -116,7 +149,7 @@ const ChatbotPage = () => {
 
             <button
               onClick={handleSend}
-              disabled={loading}
+              disabled={loading || !userId}
               className="absolute bottom-4 right-4 bg-gradient-to-br from-purple-500 to-blue-500 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg hover:scale-105 transition-transform duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (

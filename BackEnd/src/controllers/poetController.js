@@ -156,3 +156,25 @@ export const getAllPoets = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch poets" });
   }
 };
+export const getMyPoetry = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    
+    const myGhazals = await Ghazal.find({ createdBy: userId })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    res.status(200).json({
+      success: true,
+      poetName: req.user.username,
+      poetry: myGhazals,
+      count: myGhazals.length
+    });
+  } catch (error) {
+    console.error("Error fetching user's poetry:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching your poetry"
+    });
+  }
+};
