@@ -20,7 +20,7 @@ import poetRoutes from './routes/poet.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import newsRoute from "./routes/newsRoutes.js";
-
+import addPoetryRoute from "./routes/addPoetryRoute.js";
 // Load environment variables
 config();
 
@@ -101,7 +101,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 // Serve static files from uploads directory
 app.use('/uploads', express.static('uploads'));
 app.use("/api/news", newsRoute);
-
+app.use('/api/addpoetry',addPoetryRoute);
 // --- Routes ---
 app.use("/api/auth", authRoutes);
 app.use("/api/bc", chatRoutes);

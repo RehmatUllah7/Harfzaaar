@@ -9,6 +9,7 @@ const BecomePoet = () => {
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState(null);
+  const [username, setUsername] = useState(""); // Add state for username
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -31,10 +32,17 @@ const BecomePoet = () => {
           return;
         }
         
-        // Set both userId and userRole
+        // Set user data
         setUserId(response.data.userId);
         setUserRole(response.data.role);
+        setUsername(response.data.username); // Set the username from response
         setLoading(false);
+
+        // Initialize form data with username as poetName
+        setFormData(prev => ({
+          ...prev,
+          poetName: response.data.username
+        }));
       } catch (error) {
         console.error('Error fetching user info:', error);
         if (error.response?.status === 401) {
@@ -52,7 +60,7 @@ const BecomePoet = () => {
   }, [navigate]);
 
   const [formData, setFormData] = useState({
-    poetName: "",
+    poetName: "", // Will be populated with username
     poetryDomain: "Ghazal",
     poetryTitle: "",
     poetryContent: "",
@@ -71,29 +79,21 @@ const BecomePoet = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "poetName") {
-      if (value && !isEnglishText(value)) {
-        setErrors((prev) => ({
-          ...prev,
-          poetName: "Only English letters are allowed.",
-        }));
-      } else {
-        setErrors((prev) => ({ ...prev, poetName: "" }));
+    // Remove poetName from editable fields
+    if (name !== "poetName") {
+      if (name === "poetryTitle" || name === "poetryContent") {
+        if (value && !isUrduText(value)) {
+          setErrors((prev) => ({
+            ...prev,
+            [name]: "Only Urdu text is allowed.",
+          }));
+        } else {
+          setErrors((prev) => ({ ...prev, [name]: "" }));
+        }
       }
-    }
 
-    if (name === "poetryTitle" || name === "poetryContent") {
-      if (value && !isUrduText(value)) {
-        setErrors((prev) => ({
-          ...prev,
-          [name]: "Only Urdu text is allowed.",
-        }));
-      } else {
-        setErrors((prev) => ({ ...prev, [name]: "" }));
-      }
+      setFormData({ ...formData, [name]: value });
     }
-
-    setFormData({ ...formData, [name]: value });
   };
 
   const allFieldsFilled = Object.values(formData).every((val) => val.trim() !== "");
@@ -120,7 +120,7 @@ const BecomePoet = () => {
     }
 
     const dataToStore = {
-      poetName: formData.poetName,
+      poetName: formData.poetName, // This will be the username
       poetryDomain: formData.poetryDomain,
       poetryTitle: formData.poetryTitle,
       poetryContent: formData.poetryContent,
@@ -160,12 +160,10 @@ const BecomePoet = () => {
               type="text"
               name="poetName"
               value={formData.poetName}
-              onChange={handleChange}
-              placeholder="Enter your full name"
-              required
-              className="w-full p-3 mt-1 border rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              readOnly // Make the field read-only
+              className="w-full p-3 mt-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-not-allowed"
             />
-            {errors.poetName && <p className="text-red-500 text-sm mt-1">{errors.poetName}</p>}
+            <p className="text-sm text-gray-500 mt-1">Your poet name is set as your username</p>
           </div>
 
           <div>

@@ -32,6 +32,7 @@ import BecomePoet2 from './pages/BecomePoet2';
 import PoetDashboard from './pages/PoetDashBoard';
 import FeedbackPage from './pages/Feedback';
 import AddNewsPage from './pages/AddNews';
+import AddPoetry from './pages/AddPoetry';
 
 function App() {
   return (
@@ -91,6 +92,7 @@ function App() {
          <Route path="/is" element={<ImageSearchPage />} />
          <Route path="/voicesearch" element={<VoiceSearch />} />
          <Route path='/poetdashboard' element={<PoetDashboard />} />
+         <Route path='/addpoetry' element={<AddPoetry />} />
         </Routes>
         <ChatbotButton />
         <Routes>

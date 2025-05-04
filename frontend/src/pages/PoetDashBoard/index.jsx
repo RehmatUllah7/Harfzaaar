@@ -9,7 +9,9 @@ const PoetDashboard = () => {
   const handleAddNews = () => {
     navigate("/addnews");
   };
-
+  const handleAddPoetry = () => {
+    navigate("/addpoetry");
+  };
   return (
     <div>
       <PoetHeader />
@@ -27,9 +29,12 @@ const PoetDashboard = () => {
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold mb-2">Write a New Poem</h2>
-          <button className="bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800 transition">
-            Create New Poem
+          <h2 className="text-xl font-semibold mb-2">Add your Poetry</h2>
+          <button
+            onClick={handleAddPoetry}
+            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
+          >
+            Add poetry
           </button>
         </section>
 
