@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 const fuzzyMatch = (a, b) => {
   if (!a || !b) return false;
   a = a.trim().toLowerCase();
@@ -27,24 +28,91 @@ const levenshteinDistance = (a, b) => {
   return dp[a.length][b.length];
 };
 
+// Feedback arrays
+const feedbacks = {
+  0: [
+    "ہر عظیم شاعر نے صفر سے آغاز کیا۔",
+    "حوصلہ رکھیں، یہ سفر کا پہلا قدم ہے۔",
+    "لکھتے رہیے، آپ کی شاعری نکھرے گی۔",
+    "کامیابی کی کنجی کوشش ہے، جاری رکھیں۔",
+    "آپ کے الفاظ میں جذبہ ہے، بس تھوڑا اور نکھار لائیں۔",
+    "ہر شعر ہمیں کچھ سکھاتا ہے، یہ بھی سیکھنے کا لمحہ ہے۔",
+    "عظمت کی شروعات ہمیشہ سادہ ہوتی ہے۔",
+    "یہ صرف آغاز ہے، آگے بڑھتے جائیں۔",
+    "شاعری دل سے نکلتی ہے، دل سے لکھتے رہیں۔",
+    "یہ کوشش قابلِ تحسین ہے، ہمت نہ ہاریں۔"
+  ],
+  40: [
+    "آپ نے اچھی کوشش کی ہے، شاباش!",
+    "ایک قدم قریب تر، بہت عمدہ!",
+    "بہتر کی طرف سفر جاری رکھیں۔",
+    "شاعری نکھر رہی ہے، جاری رکھیں۔",
+    "آپ کا انداز نرالا ہے، مشق کرتے رہیں۔",
+    "قافیہ میں بہتری آئی ہے، مبارک ہو!",
+    "الفاظ میں روانی محسوس ہو رہی ہے۔",
+    "آپ کی نظم میں روشنی ہے۔",
+    "محنت نظر آ رہی ہے، بہت خوب!",
+    "اچھا آغاز ہے، اب مزید نکھار لائیں۔"
+  ],
+  60: [
+    "واہ! آپ کا قافیہ و ردیف جڑ رہا ہے!",
+    "یہ تو کمال کی مشق ہے!",
+    "الفاظ خوبصورتی سے جُڑ رہے ہیں۔",
+    "آپ کی گرہ میں شاعری کی جھلک نظر آئی۔",
+    "محسوس ہوتا ہے آپ شاعر ہیں!",
+    "نظم میں روانی ہے، مزید لکھتے رہیں۔",
+    "شاعری کا ذوق ابھر رہا ہے۔",
+    "آپ کی گرہ قابلِ تعریف ہے۔",
+    "شعر مکمل کرنے کا انداز بہت عمدہ ہے۔",
+    "شاعری کے راستے پر آپ درست سمت میں جا رہے ہیں!"
+  ],
+  high: [
+    "زبردست! آپ کی گرہ دل کو چھو گئی۔",
+    "بہترین انداز! مکمل شاعر نظر آ رہے ہیں۔",
+    "یہ تو باقاعدہ استادانہ کوشش تھی!",
+    "شاعری کا فن آپ پر مہربان ہے۔",
+    "ردیف و قافیہ میں مہارت دکھائی ہے۔",
+    "آپ کی گرہ نے اصل شعر کو مکمل کر دیا!",
+    "آپ کی شاعری پروفیشنل درجے پر ہے۔",
+    "یہ گرہ پڑھ کر دل خوش ہو گیا۔",
+    "کیا خوب صورت تکمیل کی ہے آپ نے۔",
+    "ایسے ہی شاعری کے خزانے کھلتے ہیں!"
+  ]
+};
+
+const getFeedback = (score) => {
+  if (score === 0) return randomItem(feedbacks[0]);
+  if (score === 40) return randomItem(feedbacks[40]);
+  if (score === 60) return randomItem(feedbacks[60]);
+  if (score > 60) return randomItem(feedbacks.high);
+  return "Keep writing!";
+};
+
+const randomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
 const Girah = () => {
   const [lineFromAPI, setLineFromAPI] = useState("");
   const [userInput, setUserInput] = useState("");
   const [matchCount, setMatchCount] = useState(null);
+  const [score, setScore] = useState(null);
+  const [feedback, setFeedback] = useState("");
   const [showResult, setShowResult] = useState(false);
+  const navigate = useNavigate();
 
   const fetchRandomLine = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/girah/girah"); // Use your actual backend port here
+      const res = await axios.get("http://localhost:5000/api/girah/girah");
       setLineFromAPI(res.data.line);
       setUserInput("");
       setMatchCount(null);
+      setScore(null);
+      setFeedback("");
       setShowResult(false);
     } catch (error) {
       console.error("Error fetching couplet line:", error);
     }
   };
-  
+
   useEffect(() => {
     fetchRandomLine();
   }, []);
@@ -52,51 +120,162 @@ const Girah = () => {
   const handleSubmit = () => {
     const userWords = userInput.trim().split(/\s+/);
     const apiWords = lineFromAPI.trim().split(/\s+/);
-  
+
     const userLast3 = userWords.slice(-3);
     const apiLast3 = apiWords.slice(-3);
-  
+
     let matches = 0;
-  
-    // Match last letter of third-last word
+
+    // Qaafia
     if (userLast3[0] && apiLast3[0]) {
       const userChar = userLast3[0].slice(-1);
       const apiChar = apiLast3[0].slice(-1);
       if (userChar === apiChar) matches++;
     }
-  
-    // Fuzzy match for last 2 words
+
+    // Radiif
     for (let i = 1; i < 3; i++) {
       if (fuzzyMatch(userLast3[i], apiLast3[i])) matches++;
     }
-  
+
+    let calculatedScore = 0;
+    if (matches === 1) calculatedScore = 40;
+    else if (matches === 2) calculatedScore = 60;
+    else if (matches === 3) calculatedScore = Math.floor(Math.random() * 31) + 60;
+    else calculatedScore = 0;
+
     setMatchCount(matches);
+    setScore(calculatedScore);
+    setFeedback(getFeedback(calculatedScore));
     setShowResult(true);
   };
-  
 
   return (
-    <div className="max-w-xl mx-auto p-4 text-center">
-      <h1 className="text-2xl font-bold mb-4">Match the Couplet Line</h1>
-      <p className="text-xl mb-4 text-purple-700 font-medium">"{lineFromAPI}"</p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 relative overflow-hidden p-4 flex items-center justify-center">
+      {/* Floating Ink Drops Background */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        {[...Array(15)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute bg-purple-900 opacity-10"
+            style={{
+              width: `${Math.random() * 80 + 20}px`,
+              height: `${Math.random() * 120 + 30}px`,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              borderRadius: `${Math.random() * 50}% ${Math.random() * 50}% ${Math.random() * 50}% ${Math.random() * 50}% / 60%`,
+              animation: `float ${Math.random() * 15 + 10}s linear infinite`,
+              filter: 'blur(1px)'
+            }}
+          />
+        ))}
+      </div>
 
-      <input
-        type="text"
-        value={userInput}
-        onChange={(e) => setUserInput(e.target.value)}
-        className="w-full p-2 border rounded mb-4"
-        placeholder="Enter your second line..."
-      />
+      {/* Constellation Stars */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        {[...Array(25)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute bg-white rounded-full"
+            style={{
+              width: `${Math.random() * 3 + 1}px`,
+              height: `${Math.random() * 3 + 1}px`,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              opacity: Math.random() * 0.3 + 0.1,
+              animation: `twinkle ${Math.random() * 5 + 3}s ease-in-out infinite`,
+            }}
+          />
+        ))}
+      </div>
 
-      <button onClick={handleSubmit} className="mb-4">Check Match</button>
+      {/* Back Button - Top Left */}
+      <button
+        onClick={() => navigate(-1)}
+        className="absolute top-6 left-6 z-20 flex items-center text-white hover:text-purple-300 transition-colors group"
+      >
+        <FiArrowLeft className="mr-1 group-hover:-translate-x-1 transition-transform" size={20} />
+        <span className="font-medium">Back</span>
+      </button>
 
-      {showResult && (
-        <div className="mb-4">
-          <p className="text-lg">Matched Words: <span className="font-semibold">{matchCount}</span> / 3</p>
+      {/* Main Content */}
+      <div className="relative z-10 w-full max-w-2xl bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden border border-white/20 p-8">
+        <h1 className="text-3xl font-bold text-center text-white mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
+          Create Your Own Second Verse
+        </h1>
+        
+        <p className="text-lg text-purple-200 mb-8 text-center">
+          Hint: Take last 2 words as radiif and 3rd last as qaafia
+        </p>
+
+        <div className="mb-8 p-4 bg-purple-900/20 rounded-xl border border-purple-400/30">
+          <p className="text-2xl font-urdu text-white text-center">"{lineFromAPI}"</p>
         </div>
-      )}
 
-      <button onClick={fetchRandomLine} variant="outline">Play Again</button>
+        <div className="space-y-6">
+          <input
+            type="text"
+            value={userInput}
+            onChange={(e) => setUserInput(e.target.value)}
+            className="w-full font-urdu p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/20 text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-xl text-center"
+            placeholder="یہاں گرۃ لگائیں"
+          />
+
+          <button 
+            onClick={handleSubmit}
+            className="w-full py-3 px-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-purple-500/30"
+          >
+            Check
+          </button>
+        </div>
+
+        {showResult && (
+          <div className="mt-10 text-center bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+            <div className="mb-6">
+              <p className="text-2xl font-bold text-white mb-2">
+                Score: {score}%
+              </p>
+              
+              {/* Animated Score Bar */}
+              <div className="w-full h-4 bg-gray-800/50 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-1000 ease-out"
+                  style={{ width: `${score}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Feedback */}
+            <div className="mb-8">
+              <p className="text-xl font-urdu text-purple-100 leading-relaxed">
+                "{feedback}"
+              </p>
+            </div>
+
+            {/* Play Again Button */}
+            <button
+              onClick={fetchRandomLine}
+              className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl border border-white/20 transition-all"
+            >
+              Play Again
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Global animations */}
+      <style jsx global>{`
+        @keyframes float {
+          0% { transform: translate(0, 0) rotate(0deg); }
+          50% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(180deg); }
+          100% { transform: translate(0, 0) rotate(360deg); }
+        }
+        @keyframes twinkle {
+          0% { opacity: 0.1; }
+          50% { opacity: 0.4; }
+          100% { opacity: 0.1; }
+        }
+      `}</style>
     </div>
   );
 };

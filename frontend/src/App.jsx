@@ -37,6 +37,7 @@ import MyNewsPage from './pages/MyNews';
 import MyPoetryPage from './pages/MyPoetry';
 import SukhanAlfaz from './pages/SukhanAlfaz';
 import Girah from './pages/Girah';
+import PatternGame from './pages/PatternGame';
 function App() {
   return (
     <div className="">
@@ -109,6 +110,7 @@ function App() {
           <Route path="/mypoetry" element={<MyPoetryPage />} />
           <Route path="/sukhanalfaz" element={<SukhanAlfaz />} />
           <Route path='/girah' element={<Girah />} />
+          <Route path='/pattern' element={<PatternGame/>} />
         </Routes>
         <ChatbotButton />
         <Routes>

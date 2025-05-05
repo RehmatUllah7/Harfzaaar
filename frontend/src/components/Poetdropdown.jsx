@@ -1,4 +1,3 @@
-
 import { Link, useNavigate } from "react-router-dom";
 import pic from "../assets/images/profile.png.png";
 import React, { useState, useEffect, useRef } from "react";
@@ -148,28 +147,31 @@ const Profile = () => {
           </button>
 
           {/* Name Section */}
-          <div className="py-4 px-4 text-xl font-semibold text-gray-800">
-            {errorMessage ? (
-              <p className="text-red-500">{errorMessage}</p>
-            ) : (
-              userInfo && userInfo.username ? capitalizeName(userInfo.username) : 'Loading...'
-            )}
+          <div className="py-4 px-4">
+            <div className="text-xl font-semibold text-gray-800">
+              {errorMessage ? (
+                <p className="text-red-500">{errorMessage}</p>
+              ) : (
+                userInfo && userInfo.username ? capitalizeName(userInfo.username) : 'Loading...'
+              )}
+            </div>
+            <div className="text-sm text-purple-600 font-medium">Poet</div>
           </div>
           <hr className="border-gray-300" />
 
           {/* Menu Items */}
           <div className="px-4 py-2">
           <Link
-              to="/mypoetry"
+              to="/addpoetry"
               className="relative block py-2 px-4 text-gray-600 hover:bg-purple-500 hover:text-white transition-all hover:translate-x-3"
             >
-              Manage My Poetry
+              Add Poetry
             </Link>
           <Link
-              to="/mynews"
+              to="/addnews"
               className="relative block py-2 px-4 text-gray-600 hover:bg-purple-500 hover:text-white transition-all hover:translate-x-3"
             >
-              Manage My News
+              Add News
             </Link>
            
             <Link
