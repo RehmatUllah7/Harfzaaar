@@ -140,7 +140,10 @@ const MyNewsPage = () => {
             My News Articles
           </h1>
         </div>
-
+        <p className="text-xl tracking-[0.1em] p-4 text-purple-200 max-w-2xl text-center mx-auto font-urdu relative z-10">
+        ہم نے مانا کہ تغافل نہ کرو گے لیکن        </p> 
+        <p className="text-xl p-2 text-purple-200 max-w-2xl text-center mx-auto font-urdu relative z-10">
+        خاک ہو جائیں گے ہم تم کو خبر ہوتے تک        </p> 
         {error && (
           <div className="mb-8 p-4 bg-red-500/20 text-red-200 rounded-xl border border-red-400/30 backdrop-blur-sm max-w-2xl mx-auto">
             {error}
@@ -158,7 +161,7 @@ const MyNewsPage = () => {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 gap-6 max-w-4xl p-2 mx-auto">
             {newsList.map((news) => (
               <div 
                 key={news._id} 

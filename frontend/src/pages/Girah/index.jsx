@@ -199,9 +199,17 @@ const Girah = () => {
         <FiArrowLeft className="mr-1 group-hover:-translate-x-1 transition-transform" size={20} />
         <span className="font-medium">Back</span>
       </button>
+      <div className="relative z-10 w-full max-w-2xl bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden border border-white/20 p-8">
 
+{/* Paragraph Above Box */}
+
+              <p className="text-xl tracking-[0.01em] p-2 text-purple-200 max-w-2xl text-center mx-auto font-urdu relative z-10">
+              تیری چپ پر بھی گرہ باندھی ہے آواز کی دیکھ              </p>
+              <p className="text-xl tracking-[0.1em] p-2 text-purple-200 max-w-2xl text-center mx-auto font-urdu relative z-10">
+              پھر نہ کہنا کہ محبت میں انا لے آیا              </p> 
       {/* Main Content */}
       <div className="relative z-10 w-full max-w-2xl bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden border border-white/20 p-8">
+        
         <h1 className="text-3xl font-bold text-center text-white mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
           Create Your Own Second Verse
         </h1>
@@ -265,7 +273,7 @@ const Girah = () => {
           </div>
         )}
       </div>
-
+</div>
       {/* Global animations */}
       <style jsx global>{`
         @keyframes float {

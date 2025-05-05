@@ -76,7 +76,14 @@ const FeedbackPage = () => {
         </svg>
         <span className="font-medium">Back</span>
       </button>
+      <div className="relative z-10 w-full max-w-2xl bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden border border-white/20 p-8">
 
+{/* Paragraph Above Box */}
+
+              <p className="text-xl tracking-[0.02em] p-2 text-purple-200 max-w-2xl text-center mx-auto font-urdu relative z-10">
+              ٹھیک ہے خود کو ہم بدلتے ہیں                         </p>
+              <p className="text-xl tracking-[0.09em] p-2 text-purple-200 max-w-2xl text-center mx-auto font-urdu relative z-10">
+              شکریہ مشورت کا چلتے ہیں                                    </p> 
       <div className="relative z-10 w-full max-w-2xl">
         <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden border border-white border-opacity-20 transition-all duration-500 hover:shadow-purple-500/30">
           <div className="p-8 md:p-10">
@@ -254,7 +261,7 @@ const FeedbackPage = () => {
           </div>
         </div>
       </div>
-
+</div>
       {/* Global styles for animations */}
       <style jsx global>{`
         @keyframes float {

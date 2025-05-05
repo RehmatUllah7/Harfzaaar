@@ -137,7 +137,14 @@ const AddPoetry = () => {
         </svg>
         <span className="font-medium">Back</span>
       </button>
+      <div className="relative z-10 w-full max-w-2xl bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden border border-white/20 p-8">
 
+{/* Paragraph Above Box */}
+
+              <p className="text-xl tracking-[0.1em] p-2 text-purple-200 max-w-2xl text-center mx-auto font-urdu relative z-10">
+              کچُھ زباں سے نا نبھایا ہے کلام                     </p>
+              <p className="text-xl tracking-[0.1em] p-2 text-purple-200 max-w-2xl text-center mx-auto font-urdu relative z-10">
+              مجھکو زخموں نے سکھایا ہے کلام                         </p> 
       <div className="relative z-10 w-full max-w-2xl">
         <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden border border-white border-opacity-20 transition-all duration-500 hover:shadow-purple-500/30">
           <div className="p-8 md:p-10">
@@ -179,6 +186,7 @@ const AddPoetry = () => {
               </div>
             ) : (
               <>
+              
                 <div className="text-center mb-8">
                   <h2 className="text-4xl font-bold text-white mb-3">Add New Poetry</h2>
                   <p className="text-purple-200 max-w-md mx-auto">
@@ -346,6 +354,7 @@ const AddPoetry = () => {
               </>
             )}
           </div>
+        </div>
         </div>
       </div>
 

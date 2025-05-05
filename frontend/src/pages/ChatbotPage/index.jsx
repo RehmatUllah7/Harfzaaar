@@ -96,8 +96,11 @@ const ChatbotPage = () => {
       
       <div className="w-full px-4 pt-12 pb-8">
     
-          <p className="text-xl p-4 text-purple-200 max-w-2xl text-center mx-auto font-urdu relative z-10">
-          ہمارے درمیاں جب بات بھی ہوتی نہیں تھی          </p>
+      <p className="text-xl tracking-[0.1em] p-4 text-purple-200 max-w-2xl text-center mx-auto font-urdu relative z-10">
+      اُس ایک بات تک کبھی نہ پہنچا میں
+      </p>        <p className="text-xl p-2 tracking-[0.12em] text-purple-200 max-w-2xl text-center mx-auto font-urdu relative z-10">
+      کھلے تھے راستے بھی گر کلام کے
+      </p> 
         <div className="mx-auto max-w-3xl w-full">
           <div className="bg-black/30 backdrop-blur-lg border border-white/10 shadow-xl rounded-3xl p-8 overflow-hidden">
             <div className="flex justify-between items-center mb-6">

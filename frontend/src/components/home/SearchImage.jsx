@@ -84,7 +84,7 @@ const SearchImage = () => {
                     className="bg-white border border-purple-200 rounded-xl shadow-sm p-5 transition hover:shadow-md"
                   >
                     <h3 className="text-lg font-bold text-purple-800 text-right">{poem.title}</h3>
-                    <p className="mt-3 text-gray-800 text-right whitespace-pre-line leading-loose">
+                    <p className="mt-3 text-gray-800 text-right whitespace-pre-line leading-[2.75]">
                       {poem.content}
                     </p>
                   </div>

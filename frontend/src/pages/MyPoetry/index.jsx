@@ -133,8 +133,9 @@ const MyPoetryPage = () => {
             My Poetry Collection
           </h1>
         </div>
-
-        {error && (
+        <p className="text-xl tracking-[0.1em] p-4 text-purple-200 max-w-2xl text-center mx-auto font-urdu relative z-10">
+        آج ہم دار پہ کھینچے گئے جن باتوں پر </p>        <p className="text-xl p-0 text-purple-200 max-w-2xl text-center mx-auto font-urdu relative z-10">
+        کیا عجب کل وہ زمانے کو نصابوں میں ملیں </p>        {error && (
           <div className="mb-8 p-4 bg-red-500/20 text-red-200 rounded-xl border border-red-400/30 backdrop-blur-sm max-w-2xl mx-auto">
             {error}
           </div>
@@ -151,15 +152,15 @@ const MyPoetryPage = () => {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 p-4 gap-6 max-w-6xl mx-auto">
             {poetry.map((item) => (
               <div 
                 key={item._id} 
                 className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 transition-all hover:border-purple-400/30 hover:shadow-xl hover:shadow-purple-500/10"
               >
-                <div className="p-6">
+                <div className="p-8">
                   <div className="flex justify-between items-start mb-4">
-                    <h2 className="text-xl font-bold text-white">{item.poetryTitle}</h2>
+                    <h2 className="text-xl font-bold tracking-[0.1em] font-urdu text-white">{item.poetryTitle}</h2>
                     <div className="flex space-x-3">
                     
                       <button
@@ -173,7 +174,7 @@ const MyPoetryPage = () => {
                   </div>
                   
                   <div className="prose prose-invert max-w-none">
-                    <p className="whitespace-pre-line text-purple-100 mb-6 leading-relaxed">
+                    <p className="whitespace-pre-line tracking-[0.1em] font-urdu text-purple-100 mb-6  leading-[2.2]">
                       {item.poetryContent}
                     </p>
                   </div>

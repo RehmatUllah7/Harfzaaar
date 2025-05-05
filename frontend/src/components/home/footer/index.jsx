@@ -39,9 +39,9 @@ const Footer = () => {
           <h2 className="text-2xl font-extrabold mb-4 text-white">Contact Us</h2>
           <p className="text-sm text-gray-300 mb-2">
             Email: 
-            <a href="mailto:rehmatullah7427@gmail.com" className="hover:underline ml-1">rehmatullah7427@gmail.com</a>
+            <a href="mailto:rehmatullah7427@gmail.com" className="hover:underline ml-1">harfzaar360@gmail.com</a>
           </p>
-          <p className="text-sm text-gray-300">Phone: +92 318 5601285</p>
+          <p className="text-sm text-gray-300">Phone: (051) 8855130</p>
         </div>
 
         {/* Social Media Links */}
