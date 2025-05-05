@@ -94,7 +94,10 @@ const ChatbotPage = () => {
     <div className="bg-gradient-to-br from-gray-900 via-purple-900 to-black min-h-screen text-white relative overflow-hidden">
       {isPoet ? <PoetHeader /> : <Header />}
       
-      <div className="w-full px-4 pt-24 pb-8">
+      <div className="w-full px-4 pt-12 pb-8">
+    
+          <p className="text-xl p-4 text-purple-200 max-w-2xl text-center mx-auto font-urdu relative z-10">
+          ہمارے درمیاں جب بات بھی ہوتی نہیں تھی          </p>
         <div className="mx-auto max-w-3xl w-full">
           <div className="bg-black/30 backdrop-blur-lg border border-white/10 shadow-xl rounded-3xl p-8 overflow-hidden">
             <div className="flex justify-between items-center mb-6">

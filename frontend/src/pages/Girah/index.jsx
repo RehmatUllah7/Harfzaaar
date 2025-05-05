@@ -55,29 +55,31 @@ const feedbacks = {
     "اچھا آغاز ہے، اب مزید نکھار لائیں۔"
   ],
   60: [
-    "واہ! آپ کا قافیہ و ردیف جڑ رہا ہے!",
-    "یہ تو کمال کی مشق ہے!",
-    "الفاظ خوبصورتی سے جُڑ رہے ہیں۔",
-    "آپ کی گرہ میں شاعری کی جھلک نظر آئی۔",
-    "محسوس ہوتا ہے آپ شاعر ہیں!",
-    "نظم میں روانی ہے، مزید لکھتے رہیں۔",
-    "شاعری کا ذوق ابھر رہا ہے۔",
-    "آپ کی گرہ قابلِ تعریف ہے۔",
-    "شعر مکمل کرنے کا انداز بہت عمدہ ہے۔",
-    "شاعری کے راستے پر آپ درست سمت میں جا رہے ہیں!"
+    "تلازمہ اچھا ہے، جمالیات مزید اچھی کریں۔",
+    "جمالیات عمدہ ہیں، تلازمہ مزید اچھا ہو سکتا ہے۔",
+    "روانی ہے، الفاظ اور اچھے تراشے جا سکتے ہیں۔",
+    "خوبصورتی سے تراشا ہے، تلازمہ مزید بہتر ہو سکتا ہے۔",
+    "اشعار میں نرمی ہے، لیکن جمالیاتی پہلو مضبوط کریں۔",
+    "بہتر نظم ہے، مگر قافیے کی مطابقت بڑھائی جا سکتی ہے۔",
+    "تشبیہات عمدہ ہیں، تھوڑا اور نکھار لائیں۔",
+    "روانی اور توازن ہے، اب تھوڑی جدت بھی دکھائیں۔",
+    "خیال عمدہ ہے، مگر الفاظ کی چمک بڑھائیں۔",
+    "اچھی کوشش ہے، مزید مشق سے کمال آ جائے گا۔"
   ],
+  
   high: [
-    "زبردست! آپ کی گرہ دل کو چھو گئی۔",
-    "بہترین انداز! مکمل شاعر نظر آ رہے ہیں۔",
-    "یہ تو باقاعدہ استادانہ کوشش تھی!",
-    "شاعری کا فن آپ پر مہربان ہے۔",
-    "ردیف و قافیہ میں مہارت دکھائی ہے۔",
-    "آپ کی گرہ نے اصل شعر کو مکمل کر دیا!",
-    "آپ کی شاعری پروفیشنل درجے پر ہے۔",
-    "یہ گرہ پڑھ کر دل خوش ہو گیا۔",
-    "کیا خوب صورت تکمیل کی ہے آپ نے۔",
-    "ایسے ہی شاعری کے خزانے کھلتے ہیں!"
+    "تلازمہ بہت اچھا ہے، جمالیات بھی بہت اچھی ہیں۔",
+    "بہت عمدہ تراشا ہے، خوبصورت بھی۔",
+    "جمالیاتی حسن اور فکری ربط دونوں کمال کے ہیں۔",
+    "تراکیب خوب ہیں، اور روانی لاجواب۔",
+    "الفاظ چنے بھی خوب اور باندھے بھی کمال۔",
+    "شعر مکمل اور مؤثر انداز میں تراشا گیا ہے۔",
+    "تلازمہ اور جمالیات کا خوبصورت امتزاج ہے۔",
+    "خیال اور بیان دونوں متاثر کن ہیں۔",
+    "ردیف، قافیہ اور خیال سب نے مل کر اثر چھوڑا ہے۔",
+    "ایسی گرہ واقعی دل کو چھو لینے والی ہوتی ہے۔"
   ]
+  
 };
 
 const getFeedback = (score) => {
@@ -217,8 +219,9 @@ const Girah = () => {
             type="text"
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
-            className="w-full font-urdu p-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/20 text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-xl text-center"
+            className="w-full font-urdu py-5 px-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/20 text-white placeholder-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-xl text-center leading-relaxed"
             placeholder="یہاں گرۃ لگائیں"
+            required
           />
 
           <button 
@@ -255,7 +258,7 @@ const Girah = () => {
             {/* Play Again Button */}
             <button
               onClick={fetchRandomLine}
-              className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl border border-white/20 transition-all"
+              className="px-8 py-3 bg-white/10 hover:bg-purple-500 text-white rounded-xl border border-white/20 transition-all"
             >
               Play Again
             </button>

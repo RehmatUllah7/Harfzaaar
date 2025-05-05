@@ -3,10 +3,33 @@ import { useNavigate } from "react-router-dom";
 import PoetHeader from "@/components/PoetHeader";
 import Footer from "@/components/home/footer";
 import { motion } from "framer-motion";
-
+import { useState } from "react";
+import { useEffect } from "react";  
+import axios from "axios";
 const PoetDashboard = () => {
   const navigate = useNavigate();
-
+  const [userName, setUserName] = useState("");
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("authToken");
+      if (!token) return;
+  
+      try {
+        const res = await axios.get("http://localhost:5000/api/auth/user-info", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        });
+        setUserName(res.data.username); // Adjust based on your API response
+      } catch (err) {
+        console.error("Failed to fetch user info", err);
+      }
+    };
+  
+    fetchUser();
+  }, []);
+  
   const actions = [
     {
       title: "Manage Poetry",
@@ -129,10 +152,13 @@ const PoetDashboard = () => {
         >
           <div className="absolute -top-20 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-purple-900 rounded-full filter blur-3xl opacity-20"></div>
           <h1 className="text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-amber-400 mb-6 relative z-10">
-            Poet's Sanctuary
+          Welcome To HarfZaar, {userName || "Poet" }
           </h1>
-          <p className="text-xl text-purple-200 max-w-2xl mx-auto relative z-10">
-            Where words dance in moonlight and emotions flow like rivers of ink.
+          <p className="text-xl text-purple-200 max-w-2xl mx-auto font-urdu relative z-10">
+          سلیقے سے ہواؤں میں جو خوشبو گھول سکتے ہیں
+          </p>
+          <p className="text-xl p-4 text-purple-200 max-w-2xl mx-auto font-urdu relative z-10">
+          ابھی کچھ لوگ باقی ہیں جو اردو بول سکتے ہیں
           </p>
           <div className="mt-8 flex justify-center relative z-10">
             <motion.div 

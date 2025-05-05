@@ -13,6 +13,7 @@ const PatternGame = () => {
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [timer, setTimer] = useState(0);
+  const [wrongAttempts, setWrongAttempts] = useState(0);
 
   // Timer effect
   useEffect(() => {
@@ -45,6 +46,8 @@ const PatternGame = () => {
     setStartTime(Date.now());
     setEndTime(null);
     setTimer(0);
+    setWrongAttempts(0);
+
   };
 
   useEffect(() => {
@@ -64,8 +67,13 @@ const PatternGame = () => {
     const expectedWord = correctPattern[userPattern.length];
     const isCorrect = word === expectedWord;
 
-    newStatusMap[index] = isCorrect ? "correct" : "wrong";
-    setStatusMap(newStatusMap);
+    if (isCorrect) {
+      newStatusMap[index] = "correct";
+    } else {
+      newStatusMap[index] = "wrong";
+      setWrongAttempts((prev) => prev + 1); // Increment wrong attempts
+    }
+        setStatusMap(newStatusMap);
 
     if (isCorrect) {
       const newUserPattern = [...userPattern, word];
@@ -132,7 +140,7 @@ const PatternGame = () => {
               }`}
               onClick={() => handleWordClick(word, idx)}
             >
-              <span className="text-lg font-medium">{word}</span>
+              <span className="text-lg font-urdu font-medium">{word}</span>
             </button>
           ))}
         </div>
@@ -154,6 +162,10 @@ const PatternGame = () => {
             <p className="text-purple-200 mb-4">
               Time: {timer} seconds
             </p>
+            <p className="text-purple-200 mb-4">
+  Wrong Attempts: {wrongAttempts}
+</p>
+
             <button
               className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-purple-500/30"
               onClick={fetchLine}
