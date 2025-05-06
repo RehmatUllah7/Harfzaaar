@@ -26,20 +26,51 @@ const FeedbackPage = () => {
     setErrors({ ...errors, [e.target.name]: "" });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length === 0) {
-      setIsSubmitting(true);
-      // Simulate API call
-      setTimeout(() => {
-        setSubmitted(true);
-        setIsSubmitting(false);
-      }, 1500);
-    } else {
-      setErrors(validationErrors);
+  // Update the handleSubmit function in your FeedbackPage component
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const validationErrors = validate();
+  
+  if (Object.keys(validationErrors).length === 0) {
+    setIsSubmitting(true);
+    
+  
+    try {
+      const response = await fetch('http://localhost:5000/api/feedback', {  // Updated this line
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit feedback');
+      }
+
+      setSubmitted(true);
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+      setErrors({
+        ...errors,
+        submit: 'Failed to submit feedback. Please try again later.',
+      });
+    } finally {
+      setIsSubmitting(false);
     }
-  };
+  } else {
+    setErrors(validationErrors);
+  }
+};
+const resetForm = () => {
+  setFormData({
+    name: "",
+    email: "",
+    message: "",
+  });
+  setErrors({});
+  setSubmitted(false);
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center p-4 relative overflow-hidden">
@@ -102,12 +133,15 @@ const FeedbackPage = () => {
                 </div>
                 <h3 className="text-3xl font-bold text-white mb-2">Thank You!</h3>
                 <p className="text-purple-200 mb-6">Your feedback has been received. We appreciate it! 💜</p>
-                <button
-                  onClick={() => setSubmitted(false)}
-                  className="px-6 py-2 bg-white bg-opacity-10 hover:bg-opacity-20 text-white rounded-full border border-white border-opacity-20 transition-all duration-300"
-                >
-                  Submit Another
-                </button>
+               <button
+  onClick={() => {
+    resetForm();
+    setSubmitted(false);
+  }}
+  className="px-6 py-2 bg-white bg-opacity-10 hover:bg-opacity-20 text-white rounded-full border border-white border-opacity-20 transition-all duration-300"
+>
+  Submit Another
+</button>
               </div>
             ) : (
               <>

@@ -22,6 +22,7 @@ import { fileURLToPath } from 'url';
 import newsRoute from "./routes/newsRoutes.js";
 import addPoetryRoute from "./routes/addPoetryRoute.js";
 import girahRoute from "./routes/GirahRoute.js";
+import FeedbackRoute from "./routes/feedbackRoute.js";
 // Load environment variables
 config();
 
@@ -116,6 +117,7 @@ app.use('/api/chatbot', chatbotRoute);
 app.use('/api/poets', poetRoutes);
 app.use('/api', sukhanRoute);
 app.use('/api/girah', girahRoute);
+app.use('/api/feedback', FeedbackRoute);
 // --- 404 Not Found Handler ---
 app.use((req, res, next) => {
   res.status(404).json({ message: 'Route not found' });
