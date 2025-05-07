@@ -105,7 +105,7 @@ const BecomePoet2 = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:5000/api/poets/submit", finalPayload, {
+      const response = await axios.post("http://localhost:5000/api/becomepoet", finalPayload, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -114,13 +114,9 @@ const BecomePoet2 = () => {
 
       console.log('Response:', response.data);
 
-      if (response.data.message === "Poet registered and role updated!") {
-        toast.success("Poet registered successfully!");
-        localStorage.removeItem("becomePoetData");
-        navigate("/");
-      } else {
-        toast.error(response.data.message || "Something went wrong");
-      }
+      toast.success("Your request is under review. You'll be notified after admin approval.");
+      localStorage.removeItem("becomePoetData");
+      navigate("/home");
     } catch (error) {
       console.error('Error submitting poet details:', error);
       console.error('Error response:', error.response?.data);
@@ -129,7 +125,7 @@ const BecomePoet2 = () => {
       if (error.response?.status === 401) {
         localStorage.removeItem('authToken');
         toast.error('Session expired. Please login again');
-        navigate('/login');
+        navigate('/');
       } else if (error.response?.status === 400) {
         toast.error(error.response.data.message || "Invalid data submitted");
       } else {
