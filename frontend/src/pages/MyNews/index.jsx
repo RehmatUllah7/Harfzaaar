@@ -78,7 +78,7 @@ const MyNewsPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 relative overflow-hidden">
       {/* Floating Ink Drops Background */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        {[...Array(15)].map((_, i) => (
+        {[...Array(55)].map((_, i) => (
           <div
             key={i}
             className="absolute bg-purple-900 opacity-10"

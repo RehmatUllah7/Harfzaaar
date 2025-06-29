@@ -30,7 +30,7 @@ import VoiceSearch from './pages/VoiceSearch';
 import ChatbotPage from './pages/ChatbotPage';
 import BecomePoet2 from './pages/BecomePoet2';
 import PoetDashboard from './pages/PoetDashBoard';
-import FeedbackPage from './pages/Feedback';
+import FeedbackPage from './pages/FeedBack';
 import AddNewsPage from './pages/AddNews';
 import AddPoetry from './pages/AddPoetry';
 import MyNewsPage from './pages/MyNews';
