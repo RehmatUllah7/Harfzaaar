@@ -1,7 +1,6 @@
-
-import { Link, useNavigate } from "react-router-dom";
-import pic from "../../assets/images/profile.png.png";
-import React, { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from 'react-router-dom';
+import pic from '../../assets/images/profile.png.png';
+import React, { useState, useEffect, useRef } from 'react';
 
 const Profile = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,13 +24,13 @@ const Profile = () => {
         setIsOpen(false);
       }
     };
-  
-    document.addEventListener("mousedown", handleClickOutside);
+
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-  
+
   const closeDropdown = () => {
     setIsOpen(false);
   };
@@ -49,7 +48,7 @@ const Profile = () => {
       const response = await fetch('http://localhost:5000/api/auth/user-info', {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -58,7 +57,7 @@ const Profile = () => {
       if (response.ok) {
         setUserInfo({
           ...data,
-          username: username || data.username // Use stored username if available
+          username: username || data.username, // Use stored username if available
         });
         setErrorMessage('');
       } else {
@@ -84,7 +83,7 @@ const Profile = () => {
   const handleLogout = async () => {
     const token = localStorage.getItem('authToken');
     if (!token) {
-      navigate('/');
+      navigate('/login');
       return;
     }
 
@@ -94,7 +93,7 @@ const Profile = () => {
       const response = await fetch('http://localhost:5000/api/auth/logout', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -103,87 +102,87 @@ const Profile = () => {
         localStorage.removeItem('userId');
         localStorage.removeItem('username');
         setIsOpen(false);
-        navigate('/');
+        navigate('/login');
       } else {
         console.error('Failed to logout properly.');
         localStorage.removeItem('authToken');
         localStorage.removeItem('userId');
         localStorage.removeItem('username');
-        navigate('/');
+        navigate('/login');
       }
     } catch (error) {
       console.error('Logout error:', error);
       localStorage.removeItem('authToken');
       localStorage.removeItem('userId');
       localStorage.removeItem('username');
-      navigate('/');
+      navigate('/login');
     } finally {
       setIsLoggingOut(false);
     }
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className='relative' ref={dropdownRef}>
       {/* Profile Picture Section */}
       <button
         onClick={toggleDropdown}
-        className="inline-block w-10 h-10 rounded-full overflow-hidden border-2 border-white cursor-pointer hover:scale-105 transition-transform"
+        className='inline-block h-10 w-10 cursor-pointer overflow-hidden rounded-full border-2 border-white transition-transform hover:scale-105'
       >
-        <img
-          src={pic}
-          alt="Profile"
-          className="w-full h-full object-cover"
-        />
+        <img src={pic} alt='Profile' className='h-full w-full object-cover' />
       </button>
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white text-black shadow-lg rounded-lg z-10">
+        <div className='absolute right-0 z-10 mt-2 w-64 rounded-lg bg-white text-black shadow-lg'>
           {/* Close Button */}
           <button
             onClick={closeDropdown}
-            className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-xl"
+            className='absolute right-2 top-2 text-xl text-gray-600 hover:text-gray-800'
           >
             ×
           </button>
 
           {/* Name Section */}
-          <div className="py-4 px-4 text-xl font-semibold text-gray-800">
+          <div className='px-4 py-4 text-xl font-semibold text-gray-800'>
             {errorMessage ? (
-              <p className="text-red-500">{errorMessage}</p>
+              <p className='text-red-500'>{errorMessage}</p>
+            ) : userInfo && userInfo.username ? (
+              capitalizeName(userInfo.username)
             ) : (
-              userInfo && userInfo.username ? capitalizeName(userInfo.username) : 'Loading...'
+              'Loading...'
             )}
           </div>
-          <hr className="border-gray-300" />
+          <hr className='border-gray-300' />
 
           {/* Menu Items */}
-          <div className="px-4 py-2">
-          <Link
-              to="/becomepoet"
-              className="relative block py-2 px-4 text-gray-600 hover:bg-purple-500 hover:text-white transition-all hover:translate-x-3"
+          <div className='px-4 py-2'>
+            <Link
+              to='/becomepoet'
+              className='relative block px-4 py-2 text-gray-600 transition-all hover:translate-x-3 hover:bg-purple-500 hover:text-white'
             >
               Become a Poet
             </Link>
-           
+
             <Link
-              to="/viapassword"
-              className="relative block py-2 px-4 text-gray-600 hover:bg-purple-500 hover:text-white transition-all hover:translate-x-3"
+              to='/viapassword'
+              className='relative block px-4 py-2 text-gray-600 transition-all hover:translate-x-3 hover:bg-purple-500 hover:text-white'
             >
               Change Password
             </Link>
-           
+
             <Link
-              to="/feedback"
-              className="relative block py-2 px-4 text-gray-600 hover:bg-purple-500 hover:text-white transition-all hover:translate-x-3"
+              to='/feedback'
+              className='relative block px-4 py-2 text-gray-600 transition-all hover:translate-x-3 hover:bg-purple-500 hover:text-white'
             >
               Feedback
             </Link>
             <button
               onClick={handleLogout}
               disabled={isLoggingOut}
-              className={`relative w-full text-left block py-2 px-4 ${
-                isLoggingOut ? 'text-gray-400' : 'text-gray-600 hover:bg-purple-500 hover:text-white'
+              className={`relative block w-full px-4 py-2 text-left ${
+                isLoggingOut
+                  ? 'text-gray-400'
+                  : 'text-gray-600 hover:bg-purple-500 hover:text-white'
               } transition-all hover:translate-x-3`}
             >
               {isLoggingOut ? 'Logging out...' : 'Logout'}

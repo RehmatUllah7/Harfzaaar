@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from "../../assets/logo.jpg";
+import logo from '../../assets/logo.jpg';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
 
@@ -27,15 +27,15 @@ const HarfZaarRegister = () => {
     const numberCheck = /[0-9]/.test(password);
 
     if (!lengthCheck) {
-      return "Password must be at least 6 characters long.";
+      return 'Password must be at least 6 characters long.';
     }
     if (!capitalCheck) {
-      return "Password must contain at least one capital letter.";
+      return 'Password must contain at least one capital letter.';
     }
     if (!numberCheck) {
-      return "Password must contain at least one number.";
+      return 'Password must contain at least one number.';
     }
-    return "";
+    return '';
   };
 
   const handleSubmit = async (event) => {
@@ -43,22 +43,22 @@ const HarfZaarRegister = () => {
     setError('');
     setEmailError('');
     setSuccessMessage('');
-  
+
     if (!username.trim()) {
       setError('Please enter your username.');
       return;
     }
-  
+
     if (!email.trim()) {
       setEmailError('Please enter your email.');
       return;
     }
-  
+
     if (!password.trim()) {
       setError('Please enter your password.');
       return;
     }
-  
+
     const passwordError = validatePassword(password);
     if (passwordError) {
       setError(passwordError);
@@ -79,7 +79,7 @@ const HarfZaarRegister = () => {
 
       if (response.ok) {
         setSuccessMessage('Registration successful! Redirecting to Login...');
-        setTimeout(() => navigate('/'), 3000);
+        setTimeout(() => navigate('/login'), 3000);
       } else {
         setError(data.error || 'Registration failed. Please try again.');
       }
@@ -90,104 +90,102 @@ const HarfZaarRegister = () => {
     }
   };
 
-  return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-purple-900 via-gray-900 to-black min-h-screen">
-      <img
-        src={logo}
-        alt="Background image"
-        className="absolute inset-0 object-cover w-full h-full opacity-30"
-      />
+ return (
+  <div className='relative min-h-screen overflow-hidden bg-gradient-to-r from-purple-900 via-gray-900 to-black'>
+    <img
+      src={logo}
+      alt='Background image'
+      className='absolute inset-0 h-full w-full object-cover opacity-30'
+    />
 
-      <div className="relative flex flex-col items-center justify-center min-h-screen px-4">
-        <h1 className="text-6xl font-extrabold text-white mb-6 drop-shadow-lg">HarfZaar</h1>
-        <p className="font-urdu text-3xl text-gray-200 mb-10 text-center leading-loose tracking-wide">
-          آتی ہے اردو زباں آتے آتے
-        </p>
+    <div className='relative flex min-h-screen flex-col items-center justify-center px-4 py-6 sm:py-10'>
+      <h1 className='mb-4 text-4xl font-extrabold text-white drop-shadow-lg md:text-6xl'>
+        HarfZaad
+      </h1>
+      <p className='mb-8 text-center font-urdu text-2xl leading-relaxed tracking-wide text-gray-200 sm:text-3xl'>
+       کہ آتی ہے اردو زباں آتے آتے 
+      </p>
 
-        <form
-          onSubmit={handleSubmit}
-          className="w-full max-w-md bg-gray-800 bg-opacity-95 p-8 rounded-2xl shadow-2xl"
+      <form
+        onSubmit={handleSubmit}
+        className='w-full max-w-sm rounded-2xl bg-gray-800 bg-opacity-95 p-6 shadow-2xl sm:max-w-md sm:p-8'
+      >
+        <div className='mb-5'>
+          <input
+            type='text'
+            id='username'
+            value={username}
+            onChange={handleUsernameChange}
+            placeholder='Enter Username'
+            className='w-full rounded-lg border border-gray-600 bg-gray-700 px-4 py-3 text-sm text-gray-300 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500'
+          />
+        </div>
+
+        <div className='mb-5'>
+          <input
+            type='email'
+            id='email'
+            value={email}
+            onChange={handleEmailChange}
+            placeholder='Enter Email'
+            className='w-full rounded-lg border border-gray-600 bg-gray-700 px-4 py-3 text-sm text-gray-300 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500'
+          />
+        </div>
+
+        {emailError && (
+          <p className='mb-5 text-sm text-red-500'>{emailError}</p>
+        )}
+
+        <div className='relative mb-5'>
+          <input
+            type={showPassword ? 'text' : 'password'}
+            id='password'
+            value={password}
+            onChange={handlePasswordChange}
+            placeholder='Enter Password'
+            className='w-full rounded-lg border border-gray-600 bg-gray-700 px-4 py-3 text-sm text-gray-300 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500'
+          />
+          <span
+            onClick={() => setShowPassword(!showPassword)}
+            className='absolute right-4 top-3 cursor-pointer text-gray-400'
+          >
+            {showPassword ? (
+              <FaEyeSlash className='h-5 w-5' />
+            ) : (
+              <FaEye className='h-5 w-5' />
+            )}
+          </span>
+        </div>
+
+        {error && <p className='mb-5 text-sm text-red-500'>{error}</p>}
+        {successMessage && (
+          <p className='mb-5 text-sm text-green-500'>{successMessage}</p>
+        )}
+
+        <button
+          type='submit'
+          className={`w-full rounded-lg bg-gradient-to-r from-red-500 to-purple-600 px-4 py-3 text-base font-semibold text-white shadow-md transition duration-300 hover:from-red-600 hover:to-purple-800 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 ${
+            loading ? 'opacity-50' : ''
+          }`}
+          disabled={loading}
         >
-          <div className="mb-6">
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={handleUsernameChange}
-              placeholder="Enter Username"
-              className="w-full px-4 py-3 text-gray-300 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-            />
-          </div>
+          {loading ? 'Registering...' : 'REGISTER'}
+        </button>
+      </form>
 
-          <div className="mb-6">
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={handleEmailChange}
-              placeholder="Enter Email"
-              className="w-full px-4 py-3 text-gray-300 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-            />
-          </div>
-
-          {emailError && (
-            <p className="text-red-500 text-sm mb-6">{emailError}</p>
-          )}
-
-          <div className="mb-6 relative">
-            <input
-              type={showPassword ? "text" : "password"} // Toggle between text and password
-              id="password"
-              value={password}
-              onChange={handlePasswordChange}
-              placeholder="Enter Password"
-              className="w-full px-4 py-3 text-gray-300 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-            />
-            {/* Password visibility toggle */}
-            <span
-              onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
-              className="absolute right-4 top-3 cursor-pointer text-gray-400"
-            >
-              {showPassword ? (
-                <FaEyeSlash className="w-6 h-6" />
-              ) : (
-                <FaEye className="w-6 h-6" />
-              )}
-            </span>
-          </div>
-
-          {error && (
-            <p className="text-red-500 text-sm mb-6">{error}</p>
-          )}
-
-          {successMessage && (
-            <p className="text-green-500 text-sm mb-6">{successMessage}</p>
-          )}
-
-          <button
-            type="submit"
-            className={`w-full px-4 py-3 text-lg font-semibold text-white bg-gradient-to-r from-red-500 to-purple-600 rounded-lg shadow-md hover:from-red-600 hover:to-purple-800 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-300 ${loading ? 'opacity-50' : ''}`}
-            disabled={loading}
-          >
-            {loading ? 'Registering...' : 'REGISTER'}
-          </button>
-
-
-         
-        </form>
-
-        <p className="mt-6 text-gray-300 text-center">
-          Already have a HarfZaar account?{' '}
-          <Link
-            to="/"
-            className="text-blue-400 hover:text-blue-600 underline transition duration-300"
-          >
-            LOGIN HERE
-          </Link>
-        </p>
-      </div>
+      <p className='mt-6 text-center text-sm text-gray-300 sm:text-base'>
+        Already have a HarfZaad account?{' '}
+        <Link
+          to='/login'
+          className='text-blue-400 underline transition duration-300 hover:text-blue-600'
+        >
+          LOGIN HERE
+        </Link>
+      </p>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default HarfZaarRegister;

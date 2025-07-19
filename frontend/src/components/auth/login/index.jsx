@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import logo from "../../../assets/logo.jpg"; // Ensure this path is correct
+import logo from '../../../assets/logo.jpg'; // Ensure this path is correct
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons from React Icons
 
 const HarfZaarLogin = () => {
-  
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -28,19 +27,19 @@ const HarfZaarLogin = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setErrorMessage('');
-  
+
     if (!username) {
       setErrorMessage('Please enter your username.');
       return;
     }
-  
+
     if (!password) {
       setErrorMessage('Please enter your password.');
       return;
     }
-  
+
     setLoading(true); // Set loading to true when the request starts
-  
+
     try {
       const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
@@ -60,7 +59,7 @@ const HarfZaarLogin = () => {
         localStorage.setItem('userId', data.userId);
         localStorage.setItem('username', data.username);
         localStorage.setItem('role', data.role); // Store the user's role
-        
+
         // Navigate based on role
         if (data.role === 'poet') {
           navigate('/poetdashboard'); // Navigate to poet dashboard
@@ -77,111 +76,107 @@ const HarfZaarLogin = () => {
     }
   };
 
-  return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-purple-900 via-gray-900 to-black min-h-screen">
-      <img
-        src={logo}
-        alt="Background image"
-        className="absolute inset-0 object-cover w-full h-full opacity-30"
-      />
+ return (
+  <div className='relative min-h-screen overflow-hidden bg-gradient-to-r from-purple-900 via-gray-900 to-black'>
+    <img
+      src={logo}
+      alt='Background image'
+      className='absolute inset-0 h-full w-full object-cover opacity-30'
+    />
 
-      <div className="relative flex flex-col items-center justify-center min-h-screen px-4">
-        <h1 className="text-6xl font-extrabold text-white mb-6 drop-shadow-lg">HarfZaar</h1>
-        <p className="font-urdu text-3xl text-gray-200 mb-10 text-center leading-loose tracking-wide">
-          آتی ہے اردو زباں آتے آتے
-        </p>
+    <div className='relative flex min-h-screen flex-col items-center justify-center px-4 py-6 sm:py-10'>
+      <h1 className='mb-4 text-4xl font-extrabold text-white drop-shadow-lg md:text-6xl'>
+        HarfZaad
+      </h1>
+      <p className='mb-8 text-center font-urdu text-2xl leading-relaxed tracking-wide text-gray-200 sm:text-3xl'>
+       کہ آتی ہے اردو زباں آتے آتے
+      </p>
 
-        <form
-          onSubmit={handleSubmit}
-          className="w-full max-w-md bg-gray-800 bg-opacity-95 p-8 rounded-2xl shadow-2xl"
+      <form
+        onSubmit={handleSubmit}
+        className='w-full max-w-sm rounded-2xl bg-gray-800 bg-opacity-95 p-6 shadow-2xl sm:max-w-md sm:p-8'
+      >
+        {errorMessage && (
+          <div className='mb-4 text-center text-red-500'>{errorMessage}</div>
+        )}
+
+        <div className='mb-5'>
+          <input
+            type='text'
+            id='username'
+            name='username'
+            value={username}
+            onChange={handleUsernameChange}
+            placeholder='Enter Username'
+            autoComplete='username'
+            className='w-full rounded-lg border border-gray-600 bg-gray-700 px-4 py-3 text-gray-300 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500'
+          />
+        </div>
+
+        <div className='relative mb-5'>
+          <input
+            type={showPassword ? 'text' : 'password'}
+            id='password'
+            name='password'
+            value={password}
+            onChange={handlePasswordChange}
+            placeholder='Enter Password'
+            autoComplete='current-password'
+            className='w-full rounded-lg border border-gray-600 bg-gray-700 px-4 py-3 text-gray-300 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500'
+          />
+          <span
+            onClick={() => setShowPassword(!showPassword)}
+            className='absolute right-4 top-3 cursor-pointer text-gray-400'
+          >
+            {showPassword ? <FaEyeSlash className='h-6 w-6' /> : <FaEye className='h-6 w-6' />}
+          </span>
+        </div>
+
+        <div className='mb-6 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center'>
+          <div className='flex items-center'>
+            <input
+              type='checkbox'
+              id='rememberMe'
+              checked={rememberMe}
+              onChange={handleRememberMeChange}
+              className='h-5 w-5 rounded border-gray-600 bg-gray-700 text-purple-600 focus:ring-2 focus:ring-purple-500'
+            />
+            <label htmlFor='rememberMe' className='ml-2 text-gray-300 text-sm'>
+              Remember Me
+            </label>
+          </div>
+          <a
+            href='/reset'
+            className='text-sm text-blue-400 underline transition duration-300 hover:text-blue-600'
+          >
+            Forgot Password?
+          </a>
+        </div>
+
+        <button
+          type='submit'
+          disabled={loading}
+          className={`w-full rounded-lg bg-gradient-to-r from-red-500 to-purple-600 px-4 py-3 text-base font-semibold text-white shadow-md transition duration-300 hover:from-red-600 hover:to-purple-800 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 ${
+            loading ? 'cursor-not-allowed opacity-50' : ''
+          }`}
         >
-          {errorMessage && (
-            <div className="mb-4 text-red-500 text-center">
-              {errorMessage}
-            </div>
-          )}
+          {loading ? 'Logging in...' : 'LOGIN'}
+        </button>
+      </form>
 
-          <div className="mb-6">
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={username}
-              onChange={handleUsernameChange}
-              placeholder="Enter Username"
-              autoComplete="username" // Add autocomplete attribute
-              className="w-full px-4 py-3 text-gray-300 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-            />
-          </div>
-
-          <div className="mb-6 relative">
-            <input
-              type={showPassword ? "text" : "password"} // Toggle between text and password
-              id="password"
-              name="password"
-              value={password}
-              onChange={handlePasswordChange}
-              placeholder="Enter Password"
-              autoComplete="current-password"
-              className="w-full px-4 py-3 text-gray-300 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-            />
-            {/* Password visibility toggle */}
-            <span
-              onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
-              className="absolute right-4 top-3 cursor-pointer text-gray-400"
-            >
-              {showPassword ? (
-                <FaEyeSlash className="w-6 h-6" /> // Eye icon for password visibility
-              ) : (
-                <FaEye className="w-6 h-6" /> // Eye icon for password visibility
-              )}
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="rememberMe"
-                checked={rememberMe}
-                onChange={handleRememberMeChange}
-                className="w-5 h-5 text-purple-600 bg-gray-700 border-gray-600 rounded focus:ring-purple-500 focus:ring-2"
-              />
-              <label htmlFor="rememberMe" className="ml-2 text-gray-300">
-                Remember Me
-              </label>
-            </div>
-            <a
-              href="/reset"
-              className="text-blue-400 hover:text-blue-600 underline transition duration-300"
-            >
-              Forgot Password?
-            </a>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading} // Disable button when loading
-            className={`w-full px-4 py-3 text-lg font-semibold text-white bg-gradient-to-r from-red-500 to-purple-600 rounded-lg shadow-md hover:from-red-600 hover:to-purple-800 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-300 ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-          >
-            {loading ? 'Logging in...' : 'LOGIN'}
-          </button>
-        </form>
-
-        <p className="mt-6 text-gray-300 text-center">
-          Don't have a HarfZaar account?{' '}
-          <Link
-            to="/signup"
-            className="text-blue-400 hover:text-blue-600 underline transition duration-300"
-          >
-            CREATE ONE
-          </Link>
-        </p>
-      </div>
+      <p className='mt-6 text-center text-sm text-gray-300 sm:text-base'>
+        Don't have a HarfZaad account?{' '}
+        <Link
+          to='/signup'
+          className='text-blue-400 underline transition duration-300 hover:text-blue-600'
+        >
+          CREATE ONE
+        </Link>
+      </p>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default HarfZaarLogin;

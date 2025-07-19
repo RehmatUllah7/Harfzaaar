@@ -10,4 +10,8 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  server: {
+    host: true, // 👈 Enables external access (like from your phone)
+    port: 5173, // Optional, but you can specify
+  },
 });

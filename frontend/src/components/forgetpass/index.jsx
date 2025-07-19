@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from "../../assets/logo.jpg";
+import logo from '../../assets/logo.jpg';
 import OtpInputForm from './OtpInputForm'; // Import OTP form
 import PasswordChangeForm from './PasswordChangeForm'; // Import Password Change form
 import { useNavigate } from 'react-router-dom';
@@ -28,13 +28,16 @@ const HarfZaarResetPassword = () => {
     setIsLoading(true);
 
     try {
-      const verifyResponse = await fetch('http://localhost:5000/api/auth/verify-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
+      const verifyResponse = await fetch(
+        'http://localhost:5000/api/auth/verify-email',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
 
       const verifyData = await verifyResponse.json();
 
@@ -56,13 +59,16 @@ const HarfZaarResetPassword = () => {
   // Function to send OTP
   const sendOtp = async (email) => {
     try {
-      const otpResponse = await fetch('http://localhost:5000/api/auth/forgot-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
+      const otpResponse = await fetch(
+        'http://localhost:5000/api/auth/forgot-password',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
 
       const otpData = await otpResponse.json();
 
@@ -95,13 +101,16 @@ const HarfZaarResetPassword = () => {
 
   const handleSubmitOtp = async (otp) => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/verify-otp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: emailForPasswordChange, otp }),
-      });
+      const response = await fetch(
+        'http://localhost:5000/api/auth/verify-otp',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: emailForPasswordChange, otp }),
+        }
+      );
 
       const data = await response.json();
 
@@ -119,21 +128,24 @@ const HarfZaarResetPassword = () => {
 
   const handleSubmitPassword = async (newPassword) => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/change-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: emailForPasswordChange, // Assuming the email is saved from previous steps
-          newPassword: newPassword,
-        }),
-      });
+      const response = await fetch(
+        'http://localhost:5000/api/auth/change-password',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: emailForPasswordChange, // Assuming the email is saved from previous steps
+            newPassword: newPassword,
+          }),
+        }
+      );
 
       const data = await response.json();
       if (response.ok) {
         alert(data.message); // Notify user that the password has been changed successfully
-        setTimeout(() => navigate('/'), 3000);
+        setTimeout(() => navigate('/login'), 3000);
         // Optionally, redirect to the login page or other screen
       } else {
         alert(data.message || 'Failed to change password.');
@@ -143,58 +155,67 @@ const HarfZaarResetPassword = () => {
     }
   };
 
-  return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-purple-900 via-gray-900 to-black min-h-screen">
-      <img
-        src={logo}
-        alt="Background image"
-        className="absolute inset-0 object-cover w-full h-full opacity-30"
-      />
-      <div className="relative flex flex-col items-center justify-center min-h-screen px-4">
-        <h1 className="text-6xl font-extrabold text-white mb-6 drop-shadow-lg">HarfZaar</h1>
-        {showOtpForm && (
-          <OtpInputForm onSubmitOtp={handleSubmitOtp} onResendOtp={handleResendOtp} />
-        )}
-        {showPasswordForm && (
-          <PasswordChangeForm onSubmitPassword={handleSubmitPassword} />
-        )}
-        {!showOtpForm && !showPasswordForm && (
-          <form
-            onSubmit={handleSubmit}
-            className="w-full max-w-md bg-gray-800 bg-opacity-95 p-8 rounded-2xl shadow-2xl"
-          >
-            <div className="mb-6">
-              <input
-                type="email"
-                value={email}
-                onChange={handleEmailChange}
-                placeholder="Enter Email"
-                className="w-full px-4 py-3 text-gray-300 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-            </div>
-            {emailError && <p className="text-red-500 text-sm mb-6">{emailError}</p>}
-            {message && <p className="text-green-500 text-sm mb-6">{message}</p>}
-            <button
-              type="submit"
-              className={`w-full px-4 py-3 text-lg font-semibold text-white bg-gradient-to-r from-red-500 to-purple-600 rounded-lg shadow-md ${
-                isLoading ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
-              disabled={isLoading}
-            >
-              {isLoading ? 'Processing...' : 'RESET PASSWORD'}
-            </button>
-            <button
-  onClick={() => navigate('/')}
-  className="absolute top-6 left-6 px-3 py-1 text-sm font-medium text-white bg-gray-700 hover:bg-gray-600 rounded-lg shadow"
->
-  Go Back
-</button>
+ return (
+  <div className='relative min-h-screen overflow-hidden bg-gradient-to-r from-purple-900 via-gray-900 to-black'>
+    <img
+      src={logo}
+      alt='Background image'
+      className='absolute inset-0 h-full w-full object-cover opacity-30'
+    />
 
-          </form>
-        )}
-      </div>
+    <div className='relative flex min-h-screen flex-col items-center justify-center px-4 py-6 sm:py-10'>
+      <h1 className='mb-6 text-4xl font-extrabold text-white drop-shadow-lg md:text-6xl'>
+        HarfZaad
+      </h1>
+
+      {showOtpForm && (
+        <OtpInputForm
+          onSubmitOtp={handleSubmitOtp}
+          onResendOtp={handleResendOtp}
+        />
+      )}
+
+      {showPasswordForm && (
+        <PasswordChangeForm onSubmitPassword={handleSubmitPassword} />
+      )}
+
+      {!showOtpForm && !showPasswordForm && (
+        <form
+          onSubmit={handleSubmit}
+          className='w-full max-w-sm rounded-2xl bg-gray-800 bg-opacity-95 p-6 shadow-2xl sm:max-w-md sm:p-8'
+        >
+          <div className='mb-5'>
+            <input
+              type='email'
+              value={email}
+              onChange={handleEmailChange}
+              placeholder='Enter Email'
+              className='w-full rounded-lg border border-gray-600 bg-gray-700 px-4 py-3 text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500'
+            />
+          </div>
+
+          {emailError && (
+            <p className='mb-5 text-sm text-red-500'>{emailError}</p>
+          )}
+          {message && (
+            <p className='mb-5 text-sm text-green-500'>{message}</p>
+          )}
+
+          <button
+            type='submit'
+            className={`w-full rounded-lg bg-gradient-to-r from-red-500 to-purple-600 px-4 py-3 text-base font-semibold text-white shadow-md transition duration-300 hover:from-red-600 hover:to-purple-800 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 ${
+              isLoading ? 'cursor-not-allowed opacity-50' : ''
+            }`}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Processing...' : 'RESET PASSWORD'}
+          </button>
+        </form>
+      )}
     </div>
-  );
+  </div>
+);
+
 };
 
 export default HarfZaarResetPassword;

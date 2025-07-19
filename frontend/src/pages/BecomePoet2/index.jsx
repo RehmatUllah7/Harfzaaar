@@ -21,7 +21,7 @@ const BecomePoet2 = () => {
       const token = localStorage.getItem('authToken');
       if (!token) {
         toast.error('Please login to become a poet');
-        navigate('/');
+        navigate('/login');
         return;
       }
 
@@ -42,7 +42,7 @@ const BecomePoet2 = () => {
         if (error.response?.status === 401) {
           localStorage.removeItem('authToken');
           toast.error('Session expired. Please login again');
-          navigate('/');
+          navigate('/login');
         } else {
           toast.error('Error checking user role');
         }
@@ -84,7 +84,7 @@ const BecomePoet2 = () => {
     const token = localStorage.getItem('authToken');
     if (!token) {
       toast.error('Please login to submit');
-      navigate('/');
+      navigate('/login');
       return;
     }
 
@@ -125,7 +125,7 @@ const BecomePoet2 = () => {
       if (error.response?.status === 401) {
         localStorage.removeItem('authToken');
         toast.error('Session expired. Please login again');
-        navigate('/');
+        navigate('/login');
       } else if (error.response?.status === 400) {
         toast.error(error.response.data.message || "Invalid data submitted");
       } else {

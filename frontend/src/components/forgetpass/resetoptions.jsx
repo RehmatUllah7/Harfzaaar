@@ -16,7 +16,7 @@ const ResetPassword = () => {
 
       {/* Heading */}
       <h1 className="text-6xl font-extrabold text-white mb-6 drop-shadow-lg">
-        HarfZaar
+        HarfZaad
       </h1>
 
       {/* Reset Options Container */}

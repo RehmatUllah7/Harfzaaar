@@ -1,7 +1,7 @@
 
 
 
-import react from 'react';
+
 import Header from '../Header';
 import Slideimg from '../Slideimg';
 import Footer from '@/components/home/footer';

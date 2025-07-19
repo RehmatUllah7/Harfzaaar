@@ -15,7 +15,8 @@ const SplashScreen = ({ children }) => {
         <img
           src={logo}
           alt="Logo"
-          className="absolute inset-0 w-full h-full object-cover animate-fade-in-out"
+          className="max-w-full max-h-full w-auto h-auto object-contain animate-fade-in-out"
+          style={{ maxHeight: "80vh", maxWidth: "80vw" }}
         />
       </div>
     );

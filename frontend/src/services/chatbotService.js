@@ -6,7 +6,7 @@ export const getChatbotResponse = async (message) => {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const prompt = `You are a helpful assistant for a poetry website called Harfzaar. 
+    const prompt = `You are a helpful assistant for a poetry website called Harfzaad. 
     The website is about Urdu poetry, literature, and culture. 
     Please provide helpful, informative, and engaging responses about:
     - Urdu poetry and literature

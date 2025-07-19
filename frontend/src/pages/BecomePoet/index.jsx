@@ -1,37 +1,40 @@
-import React, { useState, useEffect } from "react";
-import Header from "@/components/home/Header";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import Header from '@/components/home/Header';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const BecomePoet = () => {
   const navigate = useNavigate();
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState(null);
-  const [username, setUsername] = useState(""); // Add state for username
+  const [username, setUsername] = useState(''); // Add state for username
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       const token = localStorage.getItem('authToken');
       if (!token) {
         toast.error('Please login to become a poet');
-        navigate('/');
+        navigate('/login');
         return;
       }
 
       try {
-        const response = await axios.get('http://localhost:5000/api/auth/user-info', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        
+        const response = await axios.get(
+          'http://localhost:5000/api/auth/user-info',
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
         // Check if user is already a poet
         if (response.data.role === 'poet') {
           toast.error('You are already registered as a poet');
           navigate('/home');
           return;
         }
-        
+
         // Set user data
         setUserId(response.data.userId);
         setUserRole(response.data.role);
@@ -39,16 +42,16 @@ const BecomePoet = () => {
         setLoading(false);
 
         // Initialize form data with username as poetName
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
-          poetName: response.data.username
+          poetName: response.data.username,
         }));
       } catch (error) {
         console.error('Error fetching user info:', error);
         if (error.response?.status === 401) {
           localStorage.removeItem('authToken');
           toast.error('Session expired. Please login again');
-          navigate('/');
+          navigate('/login');
         } else {
           toast.error('Error fetching user info');
         }
@@ -60,17 +63,17 @@ const BecomePoet = () => {
   }, [navigate]);
 
   const [formData, setFormData] = useState({
-    poetName: "", // Will be populated with username
-    poetryDomain: "Ghazal",
-    poetryTitle: "",
-    poetryContent: "",
-    genre: "Romantic",
+    poetName: '', // Will be populated with username
+    poetryDomain: 'Ghazal',
+    poetryTitle: '',
+    poetryContent: '',
+    genre: 'Romantic',
   });
 
   const [errors, setErrors] = useState({
-    poetName: "",
-    poetryTitle: "",
-    poetryContent: "",
+    poetName: '',
+    poetryTitle: '',
+    poetryContent: '',
   });
 
   const isUrduText = (text) => /^[\u0600-\u06FF\s]+$/.test(text);
@@ -80,15 +83,15 @@ const BecomePoet = () => {
     const { name, value } = e.target;
 
     // Remove poetName from editable fields
-    if (name !== "poetName") {
-      if (name === "poetryTitle" || name === "poetryContent") {
+    if (name !== 'poetName') {
+      if (name === 'poetryTitle' || name === 'poetryContent') {
         if (value && !isUrduText(value)) {
           setErrors((prev) => ({
             ...prev,
-            [name]: "Only Urdu text is allowed.",
+            [name]: 'Only Urdu text is allowed.',
           }));
         } else {
-          setErrors((prev) => ({ ...prev, [name]: "" }));
+          setErrors((prev) => ({ ...prev, [name]: '' }));
         }
       }
 
@@ -96,26 +99,28 @@ const BecomePoet = () => {
     }
   };
 
-  const allFieldsFilled = Object.values(formData).every((val) => val.trim() !== "");
-  const noErrors = Object.values(errors).every((err) => err === "");
+  const allFieldsFilled = Object.values(formData).every(
+    (val) => val.trim() !== ''
+  );
+  const noErrors = Object.values(errors).every((err) => err === '');
   const isFormValid = allFieldsFilled && noErrors;
 
   const handleNext = () => {
     if (!isFormValid) {
-      toast.error("Please fill out all fields correctly before proceeding.");
+      toast.error('Please fill out all fields correctly before proceeding.');
       return;
     }
 
     const token = localStorage.getItem('authToken');
     if (!token) {
-      toast.error("Please login to become a poet");
-      navigate('/');
+      toast.error('Please login to become a poet');
+      navigate('/login');
       return;
     }
 
     if (!userId) {
-      toast.error("User ID not found. Please try logging in again.");
-      navigate('/');
+      toast.error('User ID not found. Please try logging in again.');
+      navigate('/login');
       return;
     }
 
@@ -125,119 +130,134 @@ const BecomePoet = () => {
       poetryTitle: formData.poetryTitle,
       poetryContent: formData.poetryContent,
       genre: formData.genre,
-      userId: userId
+      userId: userId,
     };
 
     console.log('Storing data for next form:', dataToStore);
-    localStorage.setItem("becomePoetData", JSON.stringify(dataToStore));
-    navigate("/becomepoet2", { state: dataToStore });
+    localStorage.setItem('becomePoetData', JSON.stringify(dataToStore));
+    navigate('/becomepoet2', { state: dataToStore });
   };
 
   if (loading) {
     return (
-      <div className="bg-gradient-to-r from-gray-900 via-black to-purple-900 min-h-screen text-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 mx-auto"></div>
-          <p className="mt-4">Loading...</p>
+      <div className='flex min-h-screen items-center justify-center bg-gradient-to-r from-gray-900 via-black to-purple-900 text-white'>
+        <div className='text-center'>
+          <div className='animate-spin mx-auto h-12 w-12 rounded-full border-b-2 border-t-2 border-purple-500'></div>
+          <p className='mt-4'>Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-gradient-to-r from-gray-900 via-black to-purple-900 min-h-screen text-white">
+    <div className='min-h-screen bg-gradient-to-r from-gray-900 via-black to-purple-900 text-white'>
       <Header />
-      <div className="max-w-2xl mx-auto p-8 mt-10 bg-white text-black rounded-lg shadow-lg">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Become a Poet</h2>
-        <p className="text-center text-gray-600 mb-8">
-          Share your poetry with the world. Fill out the form below to submit your work.
+      <div className='mx-auto mt-10 max-w-2xl rounded-lg bg-white p-8 text-black shadow-lg'>
+        <h2 className='mb-6 text-center text-3xl font-bold text-gray-800'>
+          Become a Poet
+        </h2>
+        <p className='mb-8 text-center text-gray-600'>
+          Share your poetry with the world. Fill out the form below to submit
+          your work.
         </p>
 
-        <form className="space-y-4">
+        <form className='space-y-4'>
           <div>
-            <label className="block text-gray-700 font-semibold">Poet Name</label>
+            <label className='block font-semibold text-gray-700'>
+              Poet Name
+            </label>
             <input
-              type="text"
-              name="poetName"
+              type='text'
+              name='poetName'
               value={formData.poetName}
               readOnly // Make the field read-only
-              className="w-full p-3 mt-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 cursor-not-allowed"
+              className='mt-1 w-full cursor-not-allowed rounded-lg border bg-gray-200 p-3 focus:outline-none focus:ring-2 focus:ring-purple-500'
             />
-            <p className="text-sm text-gray-500 mt-1">Your poet name is set as your username</p>
+            <p className='mt-1 text-sm text-gray-500'>
+              Your poet name is set as your username
+            </p>
           </div>
 
           <div>
-            <label className="block text-gray-700 font-semibold">Poetry Domain</label>
+            <label className='block font-semibold text-gray-700'>
+              Poetry Domain
+            </label>
             <select
-              name="poetryDomain"
+              name='poetryDomain'
               value={formData.poetryDomain}
               onChange={handleChange}
               required
-              className="w-full p-3 mt-1 border rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className='mt-1 w-full rounded-lg border bg-gray-100 p-3 focus:outline-none focus:ring-2 focus:ring-purple-500'
             >
-              <option value="Ghazal">Ghazal</option>
-              <option value="Nazm">Nazm</option>
-              <option value="Rubai">Rubai</option>
-              <option value="Marsiya">Marsiya</option>
+              <option value='Ghazal'>Ghazal</option>
+              <option value='Nazm'>Nazm</option>
+              <option value='Rubai'>Rubai</option>
+              <option value='Marsiya'>Marsiya</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-gray-700 font-semibold">Poetry Title</label>
+            <label className='block font-semibold text-gray-700'>
+              Poetry Title
+            </label>
             <input
-              type="text"
-              name="poetryTitle"
+              type='text'
+              name='poetryTitle'
               value={formData.poetryTitle}
               onChange={handleChange}
-              placeholder="شاعری کا عنوان لکھیں"
+              placeholder='شاعری کا عنوان لکھیں'
               required
-              className="w-full p-3 mt-1 border rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500 urdu-font"
+              className='urdu-font mt-1 w-full rounded-lg border bg-gray-100 p-3 focus:outline-none focus:ring-2 focus:ring-purple-500'
             />
             {errors.poetryTitle && (
-              <p className="text-red-500 text-sm mt-1">{errors.poetryTitle}</p>
+              <p className='mt-1 text-sm text-red-500'>{errors.poetryTitle}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-gray-700 font-semibold">Your Poetry</label>
+            <label className='block font-semibold text-gray-700'>
+              Your Poetry
+            </label>
             <textarea
-              name="poetryContent"
+              name='poetryContent'
               value={formData.poetryContent}
               onChange={handleChange}
-              placeholder="اپنی شاعری یہاں لکھیں..."
+              placeholder='اپنی شاعری یہاں لکھیں...'
               required
-              rows="5"
-              className="w-full p-3 mt-1 border rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500 urdu-font"
+              rows='5'
+              className='urdu-font mt-1 w-full rounded-lg border bg-gray-100 p-3 focus:outline-none focus:ring-2 focus:ring-purple-500'
             ></textarea>
             {errors.poetryContent && (
-              <p className="text-red-500 text-sm mt-1">{errors.poetryContent}</p>
+              <p className='mt-1 text-sm text-red-500'>
+                {errors.poetryContent}
+              </p>
             )}
           </div>
 
           <div>
-            <label className="block text-gray-700 font-semibold">Genre</label>
+            <label className='block font-semibold text-gray-700'>Genre</label>
             <select
-              name="genre"
+              name='genre'
               value={formData.genre}
               onChange={handleChange}
               required
-              className="w-full p-3 mt-1 border rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className='mt-1 w-full rounded-lg border bg-gray-100 p-3 focus:outline-none focus:ring-2 focus:ring-purple-500'
             >
-              <option value="Romantic">Romantic</option>
-              <option value="Mystical">Mystical</option>
-              <option value="Philosophical">Philosophical</option>
-              <option value="Revolutionary">Revolutionary</option>
+              <option value='Romantic'>Romantic</option>
+              <option value='Mystical'>Mystical</option>
+              <option value='Philosophical'>Philosophical</option>
+              <option value='Revolutionary'>Revolutionary</option>
             </select>
           </div>
 
           <button
-            type="button"
+            type='button'
             onClick={handleNext}
             disabled={!isFormValid}
-            className={`w-full font-bold py-3 px-6 rounded-lg transition-transform transform ${
+            className={`w-full transform rounded-lg px-6 py-3 font-bold transition-transform ${
               isFormValid
-                ? "bg-purple-600 hover:bg-purple-700 text-white hover:scale-105"
-                : "bg-gray-400 text-white cursor-not-allowed"
+                ? 'bg-purple-600 text-white hover:scale-105 hover:bg-purple-700'
+                : 'cursor-not-allowed bg-gray-400 text-white'
             }`}
           >
             Next

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from "../../assets/logo.jpg";
+import logo from '../../assets/logo.jpg';
 import { useNavigate } from 'react-router-dom';
 
 const ContinueViaPassword = () => {
@@ -25,12 +25,14 @@ const ContinueViaPassword = () => {
 
     // Frontend Validations
     if (!email || !previousPassword || !newPassword || !reEnterNewPassword) {
-      setError("All fields are required.");
+      setError('All fields are required.');
       return;
     }
 
     if (!isValidPassword(newPassword)) {
-      setError("Password must be at least 8 characters long, contain one uppercase letter, and one number.");
+      setError(
+        'Password must be at least 8 characters long, contain one uppercase letter, and one number.'
+      );
       return;
     }
 
@@ -41,18 +43,25 @@ const ContinueViaPassword = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/auth/change-passwordviapassword', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, currentPassword: previousPassword, newPassword }),
-      });
+      const response = await fetch(
+        'http://localhost:5000/api/auth/change-passwordviapassword',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            currentPassword: previousPassword,
+            newPassword,
+          }),
+        }
+      );
 
       const data = await response.json();
       if (response.ok) {
         setMessage(data.message);
-        setTimeout(() => navigate('/'), 3000);
+        setTimeout(() => navigate('/login'), 3000);
       } else {
         setError(data.message || 'Failed to change password.');
       }
@@ -64,72 +73,76 @@ const ContinueViaPassword = () => {
   };
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-purple-900 via-gray-900 to-black min-h-screen flex flex-col items-center justify-center px-4">
-      <h1 className="text-6xl font-extrabold text-white mb-6 drop-shadow-lg">HarfZaar</h1>
+    <div className='relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-r from-purple-900 via-gray-900 to-black px-4'>
+      <h1 className='mb-6 text-6xl font-extrabold text-white drop-shadow-lg'>
+        HarfZaar
+      </h1>
       <img
         src={logo}
-        alt="Background image"
-        className="absolute inset-0 object-cover w-full h-full opacity-30"
+        alt='Background image'
+        className='absolute inset-0 h-full w-full object-cover opacity-30'
       />
-      <div className="relative w-full max-w-md bg-gray-800 bg-opacity-95 p-8 rounded-2xl shadow-2xl">
-        <h2 className="text-2xl font-semibold text-white text-center mb-4">Change Password</h2>
+      <div className='relative w-full max-w-md rounded-2xl bg-gray-800 bg-opacity-95 p-8 shadow-2xl'>
+        <h2 className='mb-4 text-center text-2xl font-semibold text-white'>
+          Change Password
+        </h2>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
+          <div className='mb-4'>
             <input
-              type="email"
+              type='email'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter Email"
-              className="w-full px-4 py-3 text-gray-300 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder='Enter Email'
+              className='w-full rounded-lg border border-gray-600 bg-gray-700 px-4 py-3 text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500'
               required
             />
           </div>
-          <div className="mb-4">
+          <div className='mb-4'>
             <input
-              type="password"
+              type='password'
               value={previousPassword}
               onChange={(e) => setPreviousPassword(e.target.value)}
-              placeholder="Previous Password"
-              className="w-full px-4 py-3 text-gray-300 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder='Previous Password'
+              className='w-full rounded-lg border border-gray-600 bg-gray-700 px-4 py-3 text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500'
               required
             />
           </div>
-          <div className="mb-4">
+          <div className='mb-4'>
             <input
-              type="password"
+              type='password'
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="New Password"
-              className="w-full px-4 py-3 text-gray-300 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder='New Password'
+              className='w-full rounded-lg border border-gray-600 bg-gray-700 px-4 py-3 text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500'
               required
             />
           </div>
-          <div className="mb-6">
+          <div className='mb-6'>
             <input
-              type="password"
+              type='password'
               value={reEnterNewPassword}
               onChange={(e) => setReEnterNewPassword(e.target.value)}
-              placeholder="Re-enter New Password"
-              className="w-full px-4 py-3 text-gray-300 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder='Re-enter New Password'
+              className='w-full rounded-lg border border-gray-600 bg-gray-700 px-4 py-3 text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500'
               required
             />
           </div>
-          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-          {message && <p className="text-green-500 text-sm mb-4">{message}</p>}
+          {error && <p className='mb-4 text-sm text-red-500'>{error}</p>}
+          {message && <p className='mb-4 text-sm text-green-500'>{message}</p>}
           <button
-            type="submit"
-            className={`w-full px-4 py-3 text-lg font-semibold text-white bg-gradient-to-r from-red-500 to-purple-600 rounded-lg shadow-md ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            type='submit'
+            className={`w-full rounded-lg bg-gradient-to-r from-red-500 to-purple-600 px-4 py-3 text-lg font-semibold text-white shadow-md ${isLoading ? 'cursor-not-allowed opacity-50' : ''}`}
             disabled={isLoading}
           >
             {isLoading ? 'Processing...' : 'CHANGE PASSWORD'}
           </button>
           {/* Go Back Button */}
-<button
-  onClick={() => navigate((-1))}
-  className="w-full mt-4 px-4 py-3 text-lg font-semibold text-white bg-gray-500 hover:bg-gray-600 rounded-lg shadow-md"
->
-  Go Back
-</button>
+          <button
+            onClick={() => navigate(-1)}
+            className='mt-4 w-full rounded-lg bg-gray-500 px-4 py-3 text-lg font-semibold text-white shadow-md hover:bg-gray-600'
+          >
+            Go Back
+          </button>
         </form>
       </div>
     </div>

@@ -11,11 +11,11 @@ const ChatbotButton = () => {
   return (
     <button
       onClick={() => navigate('/chatbot')}
-      className="fixed bottom-28 right-10 bg-gradient-to-r from-blue-500 via-blue-600 to-purple-600 hover:from-blue-600 hover:via-blue-700 hover:to-purple-700 text-white rounded-full w-16 h-16 flex items-center justify-center shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-110 z-50 group"
+      className="fixed bottom-28 right-10  bg-gradient-to-r from-blue-500 via-blue-600 to-purple-600 hover:from-blue-600 hover:via-blue-700 hover:to-purple-700 text-white rounded-full w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-110 z-50 group"
       aria-label="Open chat"
     >
       {/* Animated background pulse */}
-      <span className="absolute -inset-2 animate-ping bg-blue-400/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+      <span className="absolute -inset-2 animate-ping hidden sm:block bg-blue-400/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
       
       {/* Glowing ring effect */}
       <div className="absolute -inset-2 rounded-full bg-gradient-to-br from-blue-400/40 to-indigo-500/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
