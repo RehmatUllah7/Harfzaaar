@@ -50,7 +50,7 @@ const LandingPage = () => {
             onClick={() => scrollTo('why')} 
             className="transition-colors duration-200"
           >
-            Why Us?
+            Why U?
           </motion.button>
           <motion.button 
             whileHover={{ scale: 1.05, color: "#a78bfa" }}

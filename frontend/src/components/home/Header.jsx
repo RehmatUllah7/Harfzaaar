@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaMicrophone, FaBars, FaTimes } from "react-icons/fa";
 import { FiImage } from "react-icons/fi";
 import toast from "react-hot-toast";
-import h1 from "../../assets/logoHead.jpg";
+import h1 from "../../assets/or.png";
 import Profile from "./profile";
 import { useImageSearch } from "../../context/ImageSearchContext";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
@@ -68,7 +68,7 @@ const Header = () => {
       {/* Main Header */}
       <header className="bg-gray-900 p-4 flex items-center justify-between sticky top-0 z-50">
         {/* Logo */}
-        <div className="relative bg-purple-900 flex items-center">
+        <div className="relative bg-gray-900 flex items-center">
           <Link to="/home">
             <img src={h1} alt="HarfZaad Logo" className="h-12" />
           </Link>

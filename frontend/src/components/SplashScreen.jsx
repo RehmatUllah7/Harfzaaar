@@ -1,28 +1,27 @@
 import { useState, useEffect } from "react";
-import logo from "../assets/slide1.png";
+import logo from "../assets/HarfZaad.Logo.png";
 
 const SplashScreen = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 500); // Show logo for 0.5 sec
+    const timer = setTimeout(() => setLoading(false), 500); // Show image for 0.5 sec
     return () => clearTimeout(timer);
   }, []);
 
   if (loading) {
     return (
-      <div className="fixed inset-0 flex justify-center items-center bg-black">
+      <div className="fixed inset-0 flex justify-center items-center bg-black z-50">
         <img
           src={logo}
-          alt="Logo"
-          className="max-w-full max-h-full w-auto h-auto object-contain animate-fade-in-out"
-          style={{ maxHeight: "80vh", maxWidth: "80vw" }}
+          alt="Splash Logo"
+          className="w-full h-full object-cover"
         />
       </div>
     );
   }
 
-  return children; // Show the actual page after loading
+  return children; // Show actual content after splash
 };
 
 export default SplashScreen;
